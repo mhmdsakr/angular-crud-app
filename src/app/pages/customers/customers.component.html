@@ -1,0 +1,95 @@
+<div class="container mt-4">
+
+  <h2 class="mb-4 fw-bold text-secondary">👥 Customers</h2>
+
+  <div class="row g-4">
+
+    @for(customer of customers; track customer.id){
+
+    <div class="col-md-6 col-lg-4">
+
+      <div class="customer-card">
+
+        <!-- avatar -->
+        <div class="avatar">
+
+          <img [src]="defaultAvatar" />
+
+        </div>
+
+        <!-- info -->
+        <div class="info">
+
+          <h5 class="name">
+            {{ customer.name }}
+          </h5>
+
+          <p class="id">
+            ID: #{{ customer.id }}
+          </p>
+
+        </div>
+
+        <!-- actions (optional) -->
+        <div class="actions">
+
+          <button class="btn-view">
+            View
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    }
+
+
+    @if(loading){
+
+    <div class="loading-box">
+
+      <div class="loading-spinner"></div>
+
+      <p>جاري عرض العملاء...</p>
+
+    </div>
+
+    }
+
+
+    @if(errorMessage){
+
+    <div class="error-box">
+
+      <div class="error-icon">
+        ⚠
+      </div>
+
+      <div class="error-content">
+
+        <h5>Something went wrong</h5>
+
+        <p>{{ errorMessage }}</p>
+
+      </div>
+
+    </div>
+
+    }
+
+
+    @if(!loading && !errorMessage && customers.length === 0){
+
+    <div class="alert alert-warning text-center">
+
+      No Customers Found
+
+    </div>
+
+    }
+
+  </div>
+
+</div>

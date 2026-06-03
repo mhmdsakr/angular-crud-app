@@ -1,0 +1,85 @@
+.dashboard {
+  padding: 20px;
+}
+
+.title {
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+/* base card */
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 20px;
+  border-radius: 22px;
+
+  color: white;
+
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+}
+
+/* icon */
+.stat-card .icon {
+  width: 55px;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 26px;
+
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+}
+
+/* text */
+.stat-card h6 {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+/* colors */
+.customers {
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+}
+
+.orders {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+}
+
+.products {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.stat-card {
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px) scale(1.02);
+}

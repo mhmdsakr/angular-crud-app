@@ -1,0 +1,624 @@
+<div class="container mt-4">
+
+  <div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-secondary fw-bold">📦 Products Dashboard</h2>
+
+    <button class="btn btn-dark rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addModal">
+      + Add Product
+    </button>
+  </div>
+
+  <div class="search-box mb-4">
+
+    <input type="text" class="form-control search-input" placeholder="Search products by name or category..."
+      [(ngModel)]="searchText" (input)="onSearchChange()" />
+
+  </div>
+
+
+  <div class="row g-4">
+
+    <!-- @for (p of products; track p.id) { -->
+    @for (p of filteredProducts; track p.id){
+
+    <div class="col-md-6 col-lg-4">
+
+      <div class="card product-card">
+
+        <img [src]="defaultImage" class="card-img-top" style="height:180px;object-fit:cover" />
+
+        <div class="card-body">
+
+          <h5 class="fw-bold text-light">{{ p.name }}</h5>
+
+          <small class="text-secondary">
+            {{ p.category }}
+          </small>
+
+          <div class="mt-2 fw-bold price-text">
+            {{ p.price }} EGP
+          </div>
+
+          <div class="mt-2 text-secondary">
+            Stock:
+            <span class="badge stock-badge">
+              {{ p.stock }}
+            </span>
+          </div>
+
+          <div class="mt-2">
+
+            @if(p.isAvailable){
+            <span class="badge badge-success">Available</span>
+            } @else {
+            <span class="badge badge-danger">Out</span>
+            }
+
+          </div>
+
+        </div>
+
+        <div class="card-footer card-footer-dark d-flex justify-content-between">
+
+          <button class="btn btn-icon btn-edit" data-bs-toggle="modal" data-bs-target="#editModal"
+            (click)="openEdit(p)">
+            <i class="fa fa-pen"></i>
+          </button>
+
+          <button class="btn btn-icon btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal"
+            (click)="openDelete(p)">
+            <i class="fa fa-trash"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+    }
+
+
+    @if(loading){
+
+    <div class="loading-box">
+
+      <div class="loading-spinner"></div>
+
+      <p>جاري عرض المنتجات...</p>
+
+    </div>
+
+    }
+
+
+    @if(errorMessage){
+
+    <div class="error-box">
+
+      <div class="error-icon">
+        ⚠
+      </div>
+
+      <div class="error-content">
+
+        <h5>Something went wrong</h5>
+
+        <p>{{ errorMessage }}</p>
+
+      </div>
+
+    </div>
+
+    }
+
+
+    @if(!loading && !errorMessage && filteredProducts.length === 0){
+
+    <div class="empty-state">
+
+      <div class="empty-icon">
+        📦
+      </div>
+
+      <h4>No Products Found</h4>
+
+      <p>Try adjusting your search or add new products</p>
+
+    </div>
+
+    }
+
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="addModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content add-product-modal border-0">
+
+      <!-- Header -->
+      <div class="modal-header modal-header-custom border-0">
+
+        <div>
+          <h4 class="fw-bold mb-1">
+            <i class="fa fa-box-open me-2"></i>
+            Add Product
+          </h4>
+
+          <small class="text-secondary">
+            Create a new product in inventory
+          </small>
+        </div>
+
+        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+
+        <form [formGroup]="productForm">
+
+          <!-- Name -->
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+              Product Name
+            </label>
+
+            <div class="input-group">
+
+              <span class="input-group-text">
+                <i class="fa fa-tag"></i>
+              </span>
+
+              <input class="form-control modern-input" placeholder="Enter product name" formControlName="name">
+
+            </div>
+
+            <small class="text-danger" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+
+              Name must be at least 4 characters
+
+            </small>
+
+          </div>
+
+          <!-- Category -->
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+              Category
+            </label>
+
+            <div class="input-group">
+
+              <span class="input-group-text">
+                <i class="fa fa-layer-group"></i>
+              </span>
+
+              <input class="form-control modern-input" placeholder="Enter category" formControlName="category">
+
+            </div>
+
+            <small class="text-danger"
+              *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched">
+
+              Category is required
+
+            </small>
+
+          </div>
+
+          <div class="row">
+
+            <!-- Price -->
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label fw-semibold">
+                Price
+              </label>
+
+              <div class="input-group">
+
+                <span class="input-group-text">
+                  <i class="fa fa-money-bill"></i>
+                </span>
+
+                <input type="number" class="form-control modern-input" formControlName="price">
+
+              </div>
+
+            </div>
+
+            <!-- Stock -->
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label fw-semibold">
+                Stock
+              </label>
+
+              <div class="input-group">
+
+                <span class="input-group-text">
+                  <i class="fa fa-cubes"></i>
+                </span>
+
+                <input type="number" class="form-control modern-input" formControlName="stock">
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 p-4 pt-0">
+
+        <button class="btn btn-outline-light w-50" data-bs-dismiss="modal">
+
+          Cancel
+
+        </button>
+
+        <button class="btn save-btn w-50" (click)="addProduct()" [disabled]="productForm.invalid">
+
+          <i class="fa fa-plus me-2"></i>
+          Save Product
+
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="editModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content add-product-modal border-0">
+
+      <!-- Header -->
+      <div class="modal-header modal-header-custom border-0">
+
+        <div>
+          <h4 class="fw-bold mb-1">
+            <i class="fa fa-pen-to-square me-2"></i>
+            Edit Product
+          </h4>
+
+          <small class="text-secondary">
+            Update product information
+          </small>
+        </div>
+
+        <button class="btn-close btn-close-white" data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+
+        <form [formGroup]="editForm">
+
+          <!-- Name -->
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+              Product Name
+            </label>
+
+            <div class="input-group">
+
+              <span class="input-group-text">
+                <i class="fa fa-tag"></i>
+              </span>
+
+              <input class="form-control modern-input" placeholder="Enter product name" formControlName="name">
+
+            </div>
+
+            <small class="text-danger" *ngIf="editForm.get('name')?.invalid && editForm.get('name')?.touched">
+
+              Name must be at least 4 characters
+
+            </small>
+
+          </div>
+
+          <!-- Category -->
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+              Category
+            </label>
+
+            <div class="input-group">
+
+              <span class="input-group-text">
+                <i class="fa fa-layer-group"></i>
+              </span>
+
+              <input class="form-control modern-input" placeholder="Enter category" formControlName="category">
+
+            </div>
+
+          </div>
+
+          <div class="row">
+
+            <!-- Price -->
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label fw-semibold">
+                Price
+              </label>
+
+              <div class="input-group">
+
+                <span class="input-group-text">
+                  <i class="fa fa-money-bill-wave"></i>
+                </span>
+
+                <input type="number" class="form-control modern-input" formControlName="price">
+
+              </div>
+
+            </div>
+
+            <!-- Stock -->
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label fw-semibold">
+                Stock
+              </label>
+
+              <div class="input-group">
+
+                <span class="input-group-text">
+                  <i class="fa fa-cubes"></i>
+                </span>
+
+                <input type="number" class="form-control modern-input" formControlName="stock">
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Availability -->
+          <div class="availability-box mt-3">
+
+            <div>
+              <div class="fw-bold">
+                Availability Status
+              </div>
+
+              <small class="text-secondary">
+                Toggle product availability
+              </small>
+            </div>
+
+            <div class="form-check form-switch m-0">
+
+              <input class="form-check-input big-switch" type="checkbox" formControlName="isAvailable">
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 p-4 pt-0">
+
+        <button class="btn btn-outline-light w-50" data-bs-dismiss="modal">
+
+          Cancel
+
+        </button>
+
+        <button class="btn update-btn w-50" (click)="updateProduct()" [disabled]="editForm.invalid">
+
+          <i class="fa fa-floppy-disk me-2"></i>
+          Update Product
+
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteModal">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content delete-modal border-0">
+
+      <div class="modal-body p-4 text-center" *ngIf="deleteProduct">
+
+        <!-- Icon -->
+        <div class="delete-icon-circle mb-4">
+
+          <i class="fa fa-trash"></i>
+
+        </div>
+
+        <!-- Title -->
+        <h3 class="fw-bold mb-2">
+
+          Delete Product?
+
+        </h3>
+
+        <p class="text-secondary mb-0">
+
+          This action cannot be undone
+
+        </p>
+
+        <!-- Product Card -->
+        <div class="delete-product-card rounded-4 p-3 mt-4 text-start">
+
+          <div class="d-flex align-items-center gap-3">
+
+            <img [src]="defaultImage" width="70" height="70" class="rounded-3" style="object-fit: cover">
+
+            <div>
+
+              <h6 class="fw-bold mb-1 text-light">
+
+                {{ deleteProduct.name }}
+
+              </h6>
+
+              <small class="text-secondary">
+
+                {{ deleteProduct.category }}
+
+              </small>
+
+              <div class="fw-bold text-success mt-1">
+
+                {{ deleteProduct.price }} EGP
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Error -->
+        @if(deleteErrorMessage){
+
+        <div class="delete-error-box mt-4">
+
+          <div class="error-icon">
+
+            <i class="fa fa-circle-exclamation"></i>
+
+          </div>
+
+          <div class="error-content">
+
+            <div class="error-title">
+
+              Unable to delete product
+
+            </div>
+
+            <small>
+
+              {{ deleteErrorMessage }}
+
+            </small>
+
+          </div>
+
+        </div>
+
+        }
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2 mt-4">
+
+          <button class="btn cancel-delete-btn w-50" data-bs-dismiss="modal">
+
+            Cancel
+
+          </button>
+
+          <button class="btn confirm-delete-btn w-50" (click)="confirmDelete()">
+
+            <i class="fa fa-trash me-2"></i>
+
+            Delete
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- toasts -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+  <!-- ADD -->
+  <div class="toast-modern shadow-lg success" *ngIf="showSuccess">
+
+    <div class="toast-icon success">
+      <i class="fa fa-circle-check"></i>
+    </div>
+
+    <div class="toast-content">
+      <div class="toast-title">Success</div>
+      <div class="toast-message">Product added successfully</div>
+    </div>
+
+    <button class="toast-close" (click)="showSuccess = false">
+      <i class="fa fa-xmark"></i>
+    </button>
+
+  </div>
+
+
+  <!-- UPDATE -->
+  <div class="toast-modern shadow-lg warning" *ngIf="showUpdateSuccess">
+
+    <div class="toast-icon warning">
+      <i class="fa fa-pen"></i>
+    </div>
+
+    <div class="toast-content">
+      <div class="toast-title">Updated</div>
+      <div class="toast-message">Product updated successfully</div>
+    </div>
+
+    <button class="toast-close" (click)="showUpdateSuccess = false">
+      <i class="fa fa-xmark"></i>
+    </button>
+
+  </div>
+
+
+  <!-- DELETE -->
+  <div class="toast-modern shadow-lg danger" *ngIf="showDeleteSuccess">
+
+    <div class="toast-icon danger">
+      <i class="fa fa-trash"></i>
+    </div>
+
+    <div class="toast-content">
+      <div class="toast-title">Deleted</div>
+      <div class="toast-message">Product deleted successfully</div>
+    </div>
+
+    <button class="toast-close" (click)="showDeleteSuccess = false">
+      <i class="fa fa-xmark"></i>
+    </button>
+
+  </div>
+
+</div>

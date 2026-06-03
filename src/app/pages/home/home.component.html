@@ -1,0 +1,63 @@
+<div class="dashboard">
+
+  <h2 class="title text-secondary">📊 Dashboard Overview</h2>
+
+  <div class="row g-4">
+
+    <!-- Customers -->
+    <div class="col-md-4">
+      <a routerLink="/customers" class="card-link">
+        <div class="stat-card customers">
+
+          <div class="icon">
+            👥
+          </div>
+
+          <div class="info">
+            <h6>Customers</h6>
+            <h3>{{customersCount}}</h3>
+          </div>
+
+        </div>
+      </a>
+    </div>
+
+    <!-- Orders -->
+    <div class="col-md-4">
+      <a routerLink="/orders" class="card-link">
+        <div class="stat-card orders">
+
+          <div class="icon">
+            🧾
+          </div>
+
+          <div class="info">
+            <h6>Orders</h6>
+            <h3>{{ordersCount}}</h3>
+          </div>
+
+        </div>
+      </a>
+    </div>
+
+    <!-- Products -->
+    <div class="col-md-4">
+      <a routerLink="/products" class="card-link">
+        <div class="stat-card products">
+
+          <div class="icon">
+            📦
+          </div>
+
+          <div class="info">
+            <h6>Products</h6>
+            <h3>{{productsCount}}</h3>
+          </div>
+
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+</div>
