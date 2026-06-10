@@ -34,6 +34,35 @@ export class OrdersComponent implements OnInit {
   searchValue = '';
   filteredOrders: Order[] = [];
 
+  pageNumber = 1;
+  pageSize = 6;
+
+  get pagedOrders() {
+    const start = (this.pageNumber - 1) * this.pageSize;
+    return this.filteredOrders.slice(start, start + this.pageSize);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredOrders.length / this.pageSize);
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.pageNumber = page;
+  }
+
+  nextPage() {
+    if (this.pageNumber < this.totalPages) {
+      this.pageNumber++;
+    }
+  }
+
+  prevPage() {
+    if (this.pageNumber > 1) {
+      this.pageNumber--;
+    }
+  }
+
   ngOnInit(): void {
     this.loadOrders();
     this.loadCustomers();
@@ -72,20 +101,20 @@ export class OrdersComponent implements OnInit {
   }
 
   filterOrders() {
-
     const value = this.searchValue.toLowerCase().trim();
 
     this.filteredOrders = this.orders.filter(o => {
-
       return (
         o.id.toString().includes(value) ||
         o.customer.name.toLowerCase().includes(value) ||
         (o.status ? 'done' : 'pending').includes(value)
       );
-
     });
 
+    this.pageNumber = 1; // مهم جدًا
   }
+
+
 
   loadCustomers() {
     this.orderService.getCustomers()

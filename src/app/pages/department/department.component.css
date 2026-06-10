@@ -1,0 +1,348 @@
+.container {
+  color: white;
+}
+
+.search-input {
+  background: #18181b;
+  border: 1px solid #27272a;
+  color: white;
+}
+
+.search-input:focus {
+  background: #18181b;
+  color: white;
+  border-color: #3b82f6;
+  box-shadow: none;
+}
+
+.department-card {
+  background: #111827;
+  border: none;
+  border-radius: 22px;
+  overflow: hidden;
+  transition: .3s;
+}
+
+.department-card:hover {
+  transform: translateY(-6px);
+}
+
+.department-cover {
+  height: 120px;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.department-cover i {
+  font-size: 45px;
+  color: white;
+}
+
+.student-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(59, 130, 246, .15);
+  color: #60a5fa;
+  padding: 8px 14px;
+  border-radius: 30px;
+  font-weight: 600;
+}
+
+.card-footer-dark {
+  background: #0f172a;
+  border-top: 1px solid #1e293b;
+}
+
+.btn-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  border: none;
+}
+
+.btn-edit {
+  background: rgba(234, 179, 8, .15);
+  color: #eab308;
+}
+
+.btn-delete {
+  background: rgba(239, 68, 68, .15);
+  color: #ef4444;
+}
+
+.loading-box {
+  text-align: center;
+  padding: 80px;
+}
+
+.loading-spinner {
+  width: 45px;
+  height: 45px;
+  border: 4px solid #1e293b;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  margin: auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+
+  100% {
+    transform: rotate(360deg);
+  }
+
+}
+
+.error-box {
+  background: rgba(239, 68, 68, .1);
+  border: 1px solid rgba(239, 68, 68, .3);
+  border-radius: 18px;
+  padding: 20px;
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.error-icon {
+  font-size: 28px;
+  color: #ef4444;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 90px 20px;
+}
+
+.empty-icon {
+  font-size: 65px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.pagination-modern {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.page-btn {
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background: #111827;
+  color: white;
+}
+
+.page-btn:disabled {
+  opacity: .4;
+}
+
+.page-number {
+  width: 60px;
+  height: 45px;
+  background: #111827;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+
+.add-department-modal,
+.delete-modal {
+  background: #111827;
+  color: white;
+  border-radius: 24px;
+}
+
+.modal-header-custom {
+  background: #0f172a;
+}
+
+.modern-input {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: white;
+}
+
+.modern-input:focus {
+  background: #1f2937;
+  color: white;
+  box-shadow: none;
+  border-color: #3b82f6;
+}
+
+.input-group-text {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #60a5fa;
+}
+
+.save-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+}
+
+.update-btn {
+  background: #eab308;
+  color: black;
+  border: none;
+}
+
+.delete-icon-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, .15);
+  color: #ef4444;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  font-size: 30px;
+}
+
+.department-preview-icon {
+  width: 70px;
+  height: 70px;
+  background: #1f2937;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #60a5fa;
+  font-size: 24px;
+}
+
+.delete-product-card {
+  background: #0f172a;
+}
+
+.confirm-delete-btn {
+  background: #dc2626;
+  color: white;
+}
+
+.cancel-delete-btn {
+  background: #374151;
+  color: white;
+}
+
+.toast-modern {
+  width: 320px;
+  background: #111827;
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.toast-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toast-icon.success {
+  background: rgba(34, 197, 94, .15);
+  color: #22c55e;
+}
+
+.toast-icon.warning {
+  background: rgba(234, 179, 8, .15);
+  color: #eab308;
+}
+
+.toast-icon.danger {
+  background: rgba(239, 68, 68, .15);
+  color: #ef4444;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+input::placeholder {
+  color: #6b7280;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #dc3545, #b02a37);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 12px;
+  transition: all .3s ease;
+  box-shadow: 0 8px 20px rgba(220, 53, 69, .25);
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, #e74c5c, #c82333);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(220, 53, 69, .35);
+}
+
+.delete-btn:active {
+  transform: scale(.98);
+}
+
+.delete-btn:disabled {
+  background: #6c757d;
+  color: #e9ecef;
+  cursor: not-allowed;
+  opacity: .8;
+  box-shadow: none;
+}
+
+.cancel-delete-btn {
+  background: #23272f;
+  border: 1px solid #343a40;
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.cancel-delete-btn:hover {
+  background: #343a40;
+  color: #fff;
+}

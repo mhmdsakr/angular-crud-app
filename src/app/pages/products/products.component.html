@@ -19,7 +19,7 @@
   <div class="row g-4">
 
     <!-- @for (p of products; track p.id) { -->
-    @for (p of filteredProducts; track p.id){
+    @for (p of paginatedProducts; track p.id){
 
     <div class="col-md-6 col-lg-4">
 
@@ -129,6 +129,36 @@
     }
 
   </div>
+
+
+
+
+
+
+
+  @if(filteredProducts.length > 0){
+
+  <div class="pagination-container mt-4">
+
+    <button class="page-btn" (click)="changePage(pageNumber - 1)" [disabled]="pageNumber === 1">
+
+      <i class="fa fa-chevron-left"></i>
+    </button>
+
+    <div class="page-info">
+      Page {{ pageNumber }} / {{ totalPages }}
+    </div>
+
+    <button class="page-btn" (click)="changePage(pageNumber + 1)" [disabled]="pageNumber === totalPages">
+
+      <i class="fa fa-chevron-right"></i>
+    </button>
+
+  </div>
+
+  }
+
+  <br>
 </div>
 
 

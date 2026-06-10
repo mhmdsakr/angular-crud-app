@@ -26,55 +26,58 @@ export class ProductsComponent implements OnInit {
 
   defaultImage = 'https://images.unsplash.com/photo-1519389950473-47ba0277781c';
 
+
+  pageNumber = 1;
+  pageSize = 6;
+
+  get paginatedProducts() {
+    const start = (this.pageNumber - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.filteredProducts.slice(start, end);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredProducts.length / this.pageSize);
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.pageNumber = page;
+  }
+
   ngOnInit(): void {
     this.loadProducts();
   }
 
   // ================= GET =================
   loadProducts() {
-
     this.loading = true;
-
     this.errorMessage = '';
 
-    this.productService.getAll()
-      .subscribe({
+    this.productService.getAll().subscribe({
+      next: (res) => {
+        this.products = res;
+        this.filteredProducts = res;
 
-        next: (res) => {
-
-          this.products = res;
-          this.filteredProducts = res;
-
-          this.loading = false;
-
-        },
-
-        error: (err) => {
-
-          console.log(err);
-
-          this.loading = false;
-
-          this.errorMessage = 'Failed To Load Products';
-
-        }
-
-      });
-
+        this.pageNumber = 1; // مهم
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        this.errorMessage = 'Failed To Load Products';
+      }
+    });
   }
 
   onSearchChange() {
-
     const value = this.searchText.toLowerCase().trim();
 
-    this.filteredProducts = this.products.filter(p => {
+    this.filteredProducts = this.products.filter(p =>
+      p.name.toLowerCase().includes(value) ||
+      p.category.toLowerCase().includes(value)
+    );
 
-      return (
-        p.name.toLowerCase().includes(value) ||
-        p.category.toLowerCase().includes(value)
-      );
-
-    });
+    this.pageNumber = 1; // مهم جدًا
   }
 
   // ================= ADD =================
