@@ -1,0 +1,57 @@
+<div class="register-page">
+
+  <a routerLink="/" class="back-home-btn">
+    <i class="fa fa-arrow-left"></i>
+    Go Back
+  </a>
+
+  <div class="register-card">
+
+    <div class="register-header">
+      <i class="fa fa-user-plus brand-icon"></i>
+
+      <h2>Create Account</h2>
+
+      <p>Join LastV Store and start managing your business</p>
+    </div>
+
+    <form (ngSubmit)="register()">
+
+      <div class="input-group-custom">
+        <i class="fa fa-user"></i>
+        <input type="text" [(ngModel)]="fullName" name="fullName" placeholder="Full Name">
+      </div>
+
+      <div class="input-group-custom">
+        <i class="fa fa-envelope"></i>
+        <input type="email" [(ngModel)]="email" name="email" placeholder="Email Address">
+      </div>
+
+      <div class="input-group-custom">
+        <i class="fa fa-lock"></i>
+        <input type="password" [(ngModel)]="password" name="password" placeholder="Password">
+      </div>
+
+      <div class="input-group-custom">
+        <i class="fa fa-shield-halved"></i>
+        <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirm Password">
+      </div>
+
+      <div *ngIf="errorMessage" class="text-danger">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="register-btn">
+        Create Account
+      </button>
+
+    </form>
+
+    <div class="login-link">
+      Already have an account?
+      <a href="#" routerLink="/login">Sign In</a>
+    </div>
+
+  </div>
+
+</div>

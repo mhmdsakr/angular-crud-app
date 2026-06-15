@@ -75,7 +75,6 @@ export class OrdersComponent implements OnInit {
 
     this.errorMessage = '';
     this.orderService.getOrders()
-      // .subscribe(res => this.orders = res);
       .subscribe({
 
         next: (res) => {
@@ -113,8 +112,6 @@ export class OrdersComponent implements OnInit {
 
     this.pageNumber = 1; // مهم جدًا
   }
-
-
 
   loadCustomers() {
     this.orderService.getCustomers()

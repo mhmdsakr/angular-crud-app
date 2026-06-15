@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   imports: [
-    RouterLink
+    RouterLink, CommonModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -18,6 +20,20 @@ export class HomeComponent implements OnInit {
     this.getOrders();
   }
   http = inject(HttpClient);
+
+
+  private authService = inject(AuthService)
+
+  role = this.authService.getUserRole();
+
+  isAdmin() {
+    return this.role === 'Admin';
+  }
+
+  isUser() {
+    return this.role === 'User';
+  }
+
 
 
   // ------------------------------- Customers------------------------------------------------

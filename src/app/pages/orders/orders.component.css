@@ -558,6 +558,7 @@
   background: #111827;
 
   border: 1px solid #1f2937;
+  width: 90%;
 
   border-radius: 16px;
 
@@ -927,4 +928,20 @@
   font-weight: 600;
   color: #444;
   padding: 0 10px;
+}
+
+.page-btn.active {
+  background: #4f46e5;
+  border-color: #4f46e5;
+}
+
+
+.page-btn {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
 }

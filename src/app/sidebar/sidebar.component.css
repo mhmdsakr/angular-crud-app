@@ -58,3 +58,18 @@
   font-size: 12px;
   opacity: 0.6;
 }
+
+.menu li.active {
+  position: relative;
+}
+
+.menu li.active a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  background: #a5b4fc;
+  border-radius: 0 6px 6px 0;
+}

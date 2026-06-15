@@ -1,17 +1,18 @@
 <div class="sidebar">
 
   <div class="brand">
-    <span class="text-primary">My -</span> Dashboard
+    <span class="text-primary">Last </span> -V
   </div>
 
   <ul class="menu">
 
     <li routerLinkActive="active">
-      <a routerLink="">
+      <a routerLink="/dashboard">
         <i class="fa fa-house me-2"></i>
         Home
       </a>
     </li>
+
 
     <li routerLinkActive="active">
       <a routerLink="/products">
@@ -27,21 +28,21 @@
       </a>
     </li>
 
-    <li routerLinkActive="active">
+    <li routerLinkActive="active" *ngIf="isAdmin()">
       <a routerLink="/customers">
         <i class="fa fa-users me-2"></i>
         Customers
       </a>
     </li>
 
-    <li routerLinkActive="active">
+    <li routerLinkActive="active" *ngIf="isAdmin()">
       <a routerLink="/department">
         <i class="fa fa-sitemap me-2"></i>
         Departments
       </a>
     </li>
 
-    <li routerLinkActive="active">
+    <li routerLinkActive="active" *ngIf="isAdmin()">
       <a routerLink="/students">
         <i class="fa fa-user-graduate me-2"></i>
         Students
@@ -52,6 +53,13 @@
       <a routerLink="/settings">
         <i class="fa fa-gear me-2"></i>
         Settings
+      </a>
+    </li>
+
+    <li>
+      <a (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket me-2"></i>
+        LogOut
       </a>
     </li>
 

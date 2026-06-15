@@ -1,8 +1,10 @@
 <div class="dashboard">
 
-  <h2 class="title text-secondary">📊 Dashboard Overview</h2>
+    <h2 class="title text-secondary">
+      📊 {{ isAdmin() ? 'Admin Dashboard' : 'User Dashboard' }}
+    </h2>
 
-  <div class="row g-4">
+  <div class="row g-4" *ngIf="isAdmin()">
 
     <!-- Customers -->
     <div class="col-md-4">
@@ -56,6 +58,44 @@
 
         </div>
       </a>
+    </div>
+
+  </div>
+
+  <div class="row g-4" *ngIf="isUser()">
+
+    <!-- My Orders -->
+    <div class="col-md-4">
+      <a routerLink="/orders" class="card-link">
+        <div class="stat-card orders">
+
+          <div class="icon">
+            🧾
+          </div>
+
+          <div class="info">
+            <h6>My Orders</h6>
+            <h3>12</h3>
+          </div>
+
+        </div>
+      </a>
+    </div>
+
+    <!-- Profile -->
+    <div class="col-md-6">
+      <div class="stat-card customers">
+
+        <div class="icon">
+          👤
+        </div>
+
+        <div class="info">
+          <h6>Profile Status</h6>
+          <h3>Complete</h3>
+        </div>
+
+      </div>
     </div>
 
   </div>

@@ -1,0 +1,49 @@
+<div class="login-page">
+
+    <a routerLink="/" class="back-home-btn">
+      <i class="fa fa-arrow-left"></i>
+      Go Back
+    </a>
+
+  <div class="login-card">
+
+    <div class="login-header">
+      <i class="fa fa-store brand-icon"></i>
+      <h2>LastV Store</h2>
+      <p>Welcome back, sign in to continue</p>
+    </div>
+
+    <form (ngSubmit)="login()">
+
+      <div class="input-group-custom">
+        <i class="fa fa-envelope"></i>
+        <input type="email" [(ngModel)]="email" name="email" placeholder="Email Address">
+      </div>
+
+      <div class="input-group-custom">
+        <i class="fa fa-lock"></i>
+        <input type="password" [(ngModel)]="password" name="password" placeholder="Password">
+      </div>
+
+      <div *ngIf="errorMessage" class="text-danger">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="login-btn">
+        Sign In
+      </button>
+
+    </form>
+
+    <div class="divider">
+      <span>OR</span>
+    </div>
+
+    <div class="register-link">
+      Don't have an account?
+      <a routerLink="/register">Create Account</a>
+    </div>
+
+  </div>
+
+</div>

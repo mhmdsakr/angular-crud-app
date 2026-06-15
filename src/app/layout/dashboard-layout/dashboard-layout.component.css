@@ -1,0 +1,13 @@
+.dashboard-wrapper {
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+.content-area {
+  transition: all 0.3s ease;
+}
+
+.main {
+  margin-left: 260px;
+  width: calc(100% - 260px);
+}

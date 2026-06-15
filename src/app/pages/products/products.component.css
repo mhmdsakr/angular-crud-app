@@ -508,6 +508,7 @@
   background: #111827;
 
   border: 1px solid #1f2937;
+  width: 90%;
 
   border-radius: 16px;
 
@@ -562,11 +563,6 @@
 .empty-icon {
   animation: float 2s ease-in-out infinite;
 }
-
-
-
-
-
 
 /* add modal */
 
@@ -850,6 +846,11 @@
   transition: 0.2s;
 }
 
+.page-btn.active {
+  background: #4f46e5;
+  border-color: #4f46e5;
+}
+
 .page-btn:hover {
   background: #4f46e5;
   border-color: #4f46e5;
@@ -864,3 +865,4 @@
   color: #cbd5e1;
   font-weight: 500;
 }
+

@@ -1,0 +1,146 @@
+<div class="landing">
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <h1>Discover & Shop Top Products 🛍️</h1>
+
+      <p>
+        Discover products, manage orders, and scale your business from one dashboard.
+      </p>
+
+      <div class="hero-actions">
+
+        <!-- لو مش عامل login -->
+        <ng-container *ngIf="!isLoggedIn()">
+          <a routerLink="/register" class="btn btn-primary">
+            Register
+          </a>
+
+          <a routerLink="/login" class="btn btn-outline-light">
+            Login
+          </a>
+        </ng-container>
+
+        <!-- لو عامل login -->
+        <ng-container *ngIf="isLoggedIn()">
+          <a routerLink="/dashboard" class="btn btn-outline-light">
+            Enter Dashboard
+          </a>
+        </ng-container>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="section">
+
+    <h2 class="section-title">Categories</h2>
+
+    <div class="grid">
+
+      <div class="card-box">
+        <i class="fa fa-laptop"></i>
+        <h5>Electronics</h5>
+      </div>
+
+      <div class="card-box">
+        <i class="fa fa-shirt"></i>
+        <h5>Fashion</h5>
+      </div>
+
+      <div class="card-box">
+        <i class="fa fa-house"></i>
+        <h5>Home</h5>
+      </div>
+
+      <div class="card-box">
+        <i class="fa fa-gamepad"></i>
+        <h5>Gaming</h5>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="section">
+
+    <h2 class="section-title">Featured Products</h2>
+
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="img"></div>
+        <h5>Wireless Headphones</h5>
+        <p>High quality sound experience</p>
+        <span>$120</span>
+      </div>
+
+      <div class="product-card">
+        <div class="img"></div>
+        <h5>Smart Watch</h5>
+        <p>Track your health & activity</p>
+        <span>$99</span>
+      </div>
+
+      <div class="product-card">
+        <div class="img"></div>
+        <h5>Gaming Mouse</h5>
+        <p>Precision for gamers</p>
+        <span>$45</span>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- OFFER BANNER -->
+  <section class="offer">
+
+    <div>
+      <h3>🔥 Summer Sale Up To 40% Off</h3>
+      <p>Limited time offer on selected products</p>
+    </div>
+
+    <button class="btn btn-light">Shop Now</button>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+
+    <div class="footer-grid">
+
+      <div>
+        <h4>Store</h4>
+        <p>Modern eCommerce dashboard built with Angular & Bootstrap</p>
+      </div>
+
+      <div>
+        <h4>Links</h4>
+        <a routerLink="/products">Products</a>
+        <a routerLink="/orders">Orders</a>
+        <a routerLink="/customers">Customers</a>
+      </div>
+
+      <div>
+        <h4>Contact</h4>
+        <p>Email: supportstore.com</p>
+        <p>Phone: +20 100 000 0000</p>
+      </div>
+
+    </div>
+
+    <div class="copy">
+      © 2026 Store Dashboard. All rights reserved.
+    </div>
+
+  </footer>
+
+</div>

@@ -247,8 +247,6 @@ input::placeholder {
   color: #6b7280;
 }
 
-
-
 input , select{
   background: #1f2937;
   border: 1px solid #374151;
@@ -264,4 +262,15 @@ input:focus , select{
 
   box-shadow:
     0 0 0 3px rgba(99, 102, 241, .2);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 90px 20px;
+}
+
+.empty-icon {
+  font-size: 65px;
+  color: #6b7280;
+  margin-bottom: 20px;
 }
