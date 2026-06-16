@@ -31,6 +31,9 @@ export interface Order {
   status: boolean;
   totalAmount: number;
 
+  createdById: string;
+  createdByName: string;
+
   customer: Customer;
   items: OrderItem[];
 }
@@ -48,6 +51,7 @@ export class OrderService {
   getOrders() {
     return this.http.get<Order[]>(`${this.baseUrl}/orders`);
   }
+
 
   getOrderById(id: number) {
     return this.http.get<Order>(`${this.baseUrl}/orders/${id}`);

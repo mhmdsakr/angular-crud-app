@@ -36,6 +36,13 @@
     </li>
 
     <li routerLinkActive="active" *ngIf="isAdmin()">
+      <a routerLink="/users">
+        <i class="fa fa-user me-2"></i>
+        Users
+      </a>
+    </li>
+
+    <!-- <li routerLinkActive="active" *ngIf="isAdmin()">
       <a routerLink="/department">
         <i class="fa fa-sitemap me-2"></i>
         Departments
@@ -47,7 +54,7 @@
         <i class="fa fa-user-graduate me-2"></i>
         Students
       </a>
-    </li>
+    </li> -->
 
     <li routerLinkActive="active">
       <a routerLink="/settings">

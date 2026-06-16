@@ -1,0 +1,91 @@
+<div class="search-box">
+
+  <input type="text" class="form-control search-input" placeholder="Search products by name or category..."
+    [(ngModel)]="search" (input)="onSearchChange()" />
+
+</div>
+<!-- USERS CARDS -->
+<div class="users-grid p-3" *ngIf="users.length > 0">
+
+  <div class="user-card" *ngFor="let u of users">
+
+    <div class="user-avatar">
+      {{ u.fullName.charAt(0).toUpperCase() }}
+    </div>
+
+    <div class="user-info">
+      <h3>{{ u.fullName }}</h3>
+      <p class="email">{{ u.email }}</p>
+
+      <!-- <div class="roles">
+        <span *ngFor="let r of u.roles" class="role-badge">
+          {{ r }}
+        </span>
+      </div> -->
+      <div class="roles">
+        <span *ngFor="let r of u.roles" class="role-badge" [ngClass]="{ 'admin-badge': r === 'Admin' }">
+          {{ r }}
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- EMPTY -->
+<div class="empty-state" *ngIf="users.length === 0 && !loading">
+  <div class="empty-icon">👤</div>
+  <h4>No Users Found</h4>
+  <p>Try adjusting search or add new users</p>
+</div>
+
+<!-- LOADING -->
+<div *ngIf="loading" class="users-grid p-3">
+
+  <div class="user-skeleton" *ngFor="let i of [1,2,3,4,5,6]">
+
+    <div class="skeleton-avatar"></div>
+
+    <div class="skeleton-info">
+      <div class="skeleton-line w-70"></div>
+      <div class="skeleton-line w-50"></div>
+
+      <div class="skeleton-badges">
+        <div class="skeleton-badge"></div>
+        <div class="skeleton-badge"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- PAGINATION -->
+@if(users.length > 0){
+
+<div class="pagination-container mt-4">
+
+  <button class="page-btn" (click)="changePage(1)" [disabled]="pageNumber === 1">
+    ⏮
+  </button>
+
+  <button class="page-btn" (click)="changePage(pageNumber - 1)" [disabled]="pageNumber === 1">
+    <i class="fa fa-chevron-left"></i>
+  </button>
+
+  <div class="page-info">
+    Page <strong>{{ pageNumber }}</strong> / {{ totalPages }}
+  </div>
+
+  <button class="page-btn" (click)="changePage(pageNumber + 1)" [disabled]="pageNumber === totalPages">
+    <i class="fa fa-chevron-right"></i>
+  </button>
+
+  <button class="page-btn" (click)="changePage(totalPages)" [disabled]="pageNumber === totalPages">
+    ⏭
+  </button>
+
+</div>
+
+}

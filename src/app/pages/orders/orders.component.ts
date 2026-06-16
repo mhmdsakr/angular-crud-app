@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 
 import { OrderService, Order, Customer, Product } from '../../services/order/order.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 declare var bootstrap: any;
 
@@ -23,8 +24,10 @@ export class OrdersComponent implements OnInit {
 
   private orderService = inject(OrderService);
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
 
   // ================= DATA =================
+
   orders: Order[] = [];
   customers: Customer[] = [];
   products: Product[] = [];
@@ -72,31 +75,35 @@ export class OrdersComponent implements OnInit {
   // ================= LOAD =================
   loadOrders() {
     this.loading = true;
-
     this.errorMessage = '';
-    this.orderService.getOrders()
-      .subscribe({
 
-        next: (res) => {
+    const userId = this.authService.getUserId();
+    const role = this.authService.getUserRole();
 
+    this.orderService.getOrders().subscribe({
+      next: (res) => {
+
+        // ================= ADMIN =================
+        if (role === 'Admin') {
           this.orders = res;
           this.filteredOrders = res;
-
-          this.loading = false;
-
-        },
-
-        error: (err) => {
-
-          console.log(err);
-
-          this.loading = false;
-
-          this.errorMessage = 'Failed To Load Orders';
-
         }
 
-      })
+        // ================= USER =================
+        else {
+          this.orders = res.filter(o => o.createdById === userId);
+          this.filteredOrders = this.orders;
+        }
+
+        this.loading = false;
+      },
+
+      error: (err) => {
+        console.log(err);
+        this.loading = false;
+        this.errorMessage = 'Failed To Load Orders';
+      }
+    });
   }
 
   filterOrders() {
@@ -132,10 +139,12 @@ export class OrdersComponent implements OnInit {
   }
 
   // ================= CREATE ORDER FORM =================
+
   showAddSuccess = false;
 
   orderForm = this.fb.group({
     customerId: [0, [Validators.required, Validators.min(1)]],
+    createdById: [''],
     status: [false],
     items: this.fb.array([this.createItem()])
   });
@@ -167,6 +176,11 @@ export class OrdersComponent implements OnInit {
       return;
     }
 
+    const userId = this.authService.getUserId();
+    this.orderForm.patchValue({
+      createdById: userId
+    });
+
     this.orderService.createOrder(this.orderForm.value)
       .subscribe(() => {
 
@@ -176,7 +190,8 @@ export class OrdersComponent implements OnInit {
 
         this.orderForm.reset({
           customerId: 0,
-          status: false
+          status: false,
+          createdById: ''
         });
 
         this.items.clear();

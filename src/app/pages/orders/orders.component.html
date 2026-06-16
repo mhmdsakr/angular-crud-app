@@ -352,10 +352,21 @@
       <div class="modal-header d-flex justify-content-between">
         <h5>📄 Order Details</h5>
 
-        <!-- customer -->
-        <p>
-          👤 <b>Customer:</b> {{ selectedOrder.customer.name }}
-        </p>
+        <div>
+          <!-- customer -->
+          <p>
+            👤 <b>Customer:</b> {{ selectedOrder.customer.name }}
+          </p>
+
+          <!-- CREATED BY -->
+          <div class="mt-1">
+            <small class="text-muted">
+              🧑‍💻 Created By:
+              <b>{{ selectedOrder.createdByName }}</b>
+            </small>
+          </div>
+        </div>
+
       </div>
 
       <div class="modal-body">

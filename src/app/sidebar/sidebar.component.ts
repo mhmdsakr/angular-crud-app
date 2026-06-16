@@ -19,7 +19,7 @@ export class SidebarComponent {
   private authService = inject(AuthService)
   private router = inject(Router)
 
-  user = this.authService.getUser();
+  user = this.authService.getUserName();
   role = this.authService.getUserRole();
 
   isAdmin() {

@@ -69,7 +69,7 @@ export class LoginComponent {
 
     this.authService.login(data).subscribe({
       next: (res: any) => {
-        this.authService.saveAuth(res.token, res.user);
+        this.authService.saveToken(res.token);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {

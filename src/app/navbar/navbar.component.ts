@@ -8,9 +8,12 @@ import { AuthService } from '../services/auth/auth.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  user: any = null;
 
-  constructor(private authService: AuthService) {
-    this.user = this.authService.getUser();
+  userName: string | null = null;
+  role: string | null = null;
+
+  constructor(private auth: AuthService) {
+    this.userName = this.auth.getUserName();
+    this.role = this.auth.getUserRole();
   }
 }

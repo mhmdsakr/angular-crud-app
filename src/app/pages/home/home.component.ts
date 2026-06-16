@@ -18,20 +18,23 @@ export class HomeComponent implements OnInit {
     this.getAllCustomers();
     this.getProduct();
     this.getOrders();
+
+    this.role = this.authService.getUserRole();
+
   }
   http = inject(HttpClient);
 
-
+  role: string | null = null;
   private authService = inject(AuthService)
 
-  role = this.authService.getUserRole();
 
-  isAdmin() {
+  isAdmin(): boolean {
     return this.role === 'Admin';
   }
 
-  isUser() {
+  isUser(): boolean {
     return this.role === 'User';
+
   }
 
 
@@ -62,12 +65,32 @@ export class HomeComponent implements OnInit {
 
   // ------------------------------- Orders ------------------------------------------------
   ordersCount = 0;
+  orders: any[] = [];
 
+  // getOrders() {
+  //   this.http.get<any[]>("https://localhost:7298/api/orders")
+  //     .subscribe(result => {
+
+  //       this.ordersCount = result.length;
+  //     });
+  // }
   getOrders() {
     this.http.get<any[]>("https://localhost:7298/api/orders")
       .subscribe(result => {
 
-        this.ordersCount = result.length;
+        const userId = this.authService.getUserId();
+        const role = this.authService.getUserRole();
+
+        // Admin → كل الأوردرات
+        if (role === 'Admin') {
+          this.orders = result;
+        }
+        // User → أوردراته فقط
+        else {
+          this.orders = result.filter(o => o.createdById === userId);
+        }
+
+        this.ordersCount = this.orders.length;
       });
   }
 
