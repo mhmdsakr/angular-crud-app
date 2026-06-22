@@ -24,7 +24,22 @@ export class AuthService {
   // ================= TOKEN =================
   saveToken(token: string) {
     if (!this.isBrowser()) return;
+
     localStorage.setItem('token', token);
+
+    const decoded: any = JSON.parse(atob(token.split('.')[1]));
+
+    localStorage.setItem('token_exp', decoded.exp);
+  }
+
+  isTokenExpired(): boolean {
+    const exp = localStorage.getItem('token_exp');
+
+    if (!exp) return true;
+
+    const now = Math.floor(Date.now() / 1000);
+
+    return now > +exp;
   }
 
   getToken(): string | null {
@@ -35,6 +50,7 @@ export class AuthService {
   logout() {
     if (!this.isBrowser()) return;
     localStorage.removeItem('token');
+    localStorage.removeItem('token_exp');
   }
 
   isLoggedIn(): boolean {
@@ -67,7 +83,12 @@ export class AuthService {
   }
 
   getUserRole(): string | null {
-    const role = this.decode()?.role;
+    const decoded = this.decode();
+
+    const role =
+      decoded?.role ||
+      decoded?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
     return Array.isArray(role) ? role[0] : role;
   }
 }

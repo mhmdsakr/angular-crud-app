@@ -8,11 +8,12 @@ import { StudentsComponent } from './pages/students/students.component';
 import { DepartmentComponent } from './pages/department/department.component';
 import { LandingComponent } from './landing/landing.component';
 import { DashboardLayoutComponent } from './layout/dashboard-layout/dashboard-layout.component';
-import { LoginComponent } from './auht/login/login.component';
-import { RegisterComponent } from './auht/register/register.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
 import { AuthGuard } from './services/guard/guard.service';
 import { UsersComponent } from './pages/users/users.component';
 import { RoleGuard } from './services/roleGurd/RoleGuard.service';
+import { CartComponent } from './pages/cart/cart.component';
 
 
 export const routes: Routes = [
@@ -24,33 +25,14 @@ export const routes: Routes = [
   },
 
   // Auth Pages
-
   {
-    path: 'login' ,
+    path: 'login',
     component: LoginComponent
   },
-
   {
     path: 'register',
     component: RegisterComponent
   },
-
-  // {
-  //   path: '',
-  //   component: DashboardLayoutComponent,
-  //   canActivate: [AuthGuard],
-  //   children: [
-
-  //     { path: 'dashboard', component: HomeComponent },
-  //     { path: 'products', component: ProductsComponent },
-  //     { path: 'orders', component: OrdersComponent },
-  //     { path: 'customers', component: CustomersComponent },
-  //     { path: 'students', component: StudentsComponent },
-  //     { path: 'department', component: DepartmentComponent },
-  //      {path: 'users' , component:UsersComponent}
-
-  //   ]
-  // },
 
   {
     path: '',
@@ -70,7 +52,10 @@ export const routes: Routes = [
 
       { path: 'department', component: DepartmentComponent, canActivate: [RoleGuard], data: { roles: ['Admin'] } },
 
-      { path: 'users', component: UsersComponent, canActivate: [RoleGuard], data: { roles: ['Admin'] } }
+      { path: 'users', component: UsersComponent, canActivate: [RoleGuard], data: { roles: ['Admin'] } },
+
+      { path: 'cart', component: CartComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'User'] } },
+
 
     ]
   },

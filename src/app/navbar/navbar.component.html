@@ -16,9 +16,23 @@
       👋 Welcome, {{ userName }}
     </span>
 
-    <div class="status">
-      ● Online
-    </div>
+    <a routerLink="/cart" class="cart-link">
+
+      <div class="status">
+
+        <i class="fa-solid fa-cart-shopping"></i>
+
+        @if(cartCount > 0){
+
+        <span class="cart-count">
+          {{ cartCount }}
+        </span>
+
+        }
+
+      </div>
+
+    </a>
 
   </div>
 

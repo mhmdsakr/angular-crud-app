@@ -2,12 +2,6 @@
 
   <div class="page-header d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold text-secondary">🧾 Orders Dashboard</h2>
-
-    <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addOrderModal">
-
-      + Add Order
-
-    </button>
   </div>
 
   <div class="mb-3">
@@ -64,19 +58,19 @@
         </div>
 
         <!-- ACTIONS -->
-        <div class="order-actions">
+        <div class="order-actions gap-2">
 
-          <button class="btn-icon view" data-bs-toggle="modal" data-bs-target="#orderDetailsModal"
+          <button class="btn-icon view w-100" data-bs-toggle="modal" data-bs-target="#orderDetailsModal"
             (click)="openOrder(o.id)">
             <i class="fa fa-eye"></i>
           </button>
 
-          <button class="btn-icon edit" data-bs-toggle="modal" data-bs-target="#statusModal"
+          <button class="btn-icon edit w-100" *ngIf="isAdmin()" data-bs-toggle="modal" data-bs-target="#statusModal"
             (click)="openStatusModal(o)">
             <i class="fa fa-pen"></i>
           </button>
 
-          <button class="btn-icon delete" data-bs-toggle="modal" data-bs-target="#deleteOrderModal"
+          <button class="btn-icon delete w-100" *ngIf="isAdmin()" data-bs-toggle="modal" data-bs-target="#deleteOrderModal"
             (click)="openDelete(o)">
             <i class="fa fa-trash"></i>
           </button>
@@ -188,7 +182,7 @@
 
           <div>
             <h3 class="fw-bold mb-1">
-              Create New Order
+              Create Urgent Order
             </h3>
 
             <p class="text-muted mb-0">
@@ -196,9 +190,9 @@
             </p>
           </div>
 
-          <div class="order-icon">
+          <!-- <div class="order-icon">
             <i class="fa fa-cart-shopping"></i>
-          </div>
+          </div> -->
 
         </div>
 
@@ -327,10 +321,8 @@
             </button>
 
             <button type="button" class="btn save-btn w-50" (click)="addOrder()" [disabled]="orderForm.invalid">
-
               <i class="fa fa-check"></i>
               Create Order
-
             </button>
 
           </div>

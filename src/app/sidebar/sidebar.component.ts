@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-sidebar',

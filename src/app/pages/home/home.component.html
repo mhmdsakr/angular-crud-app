@@ -1,101 +1,138 @@
-<div class="dashboard">
+<div class="dash-wrapper">
 
-    <h2 class="title text-secondary">
-      📊 {{ isAdmin() ? 'Admin Dashboard' : 'User Dashboard' }}
-    </h2>
+  <!-- HERO HEADER -->
+  <div class="dash-hero">
 
-  <div class="row g-4" *ngIf="isAdmin()">
+    <div>
+      <h1>
+        <i class="fa-solid fa-gauge-high"></i>
+        {{ isAdmin() ? 'Admin Overview' : 'User Overview' }}
+      </h1>
 
-    <!-- Customers -->
-    <div class="col-md-4">
-      <a routerLink="/customers" class="card-link">
-        <div class="stat-card customers">
-
-          <div class="icon">
-            👥
-          </div>
-
-          <div class="info">
-            <h6>Customers</h6>
-            <h3>{{customersCount}}</h3>
-          </div>
-
-        </div>
-      </a>
+      <p>Summary of your latest performance and operations</p>
     </div>
 
-    <!-- Orders -->
-    <div class="col-md-4">
-      <a routerLink="/orders" class="card-link">
-        <div class="stat-card orders">
 
-          <div class="icon">
-            🧾
-          </div>
+  </div>
 
-          <div class="info">
-            <h6>Orders</h6>
-            <h3>{{ordersCount}}</h3>
-          </div>
+  <!-- KPI STRIP -->
+  <div class="kpi-grid">
 
-        </div>
-      </a>
+    <div class="kpi">
+      <i class="fa-solid fa-box"></i>
+      <div>
+        <span>Total Products</span>
+        <h2>{{ productsCount }}</h2>
+      </div>
     </div>
 
-    <!-- Products -->
-    <div class="col-md-4">
-      <a routerLink="/products" class="card-link">
-        <div class="stat-card products">
+    <div class="kpi" *ngIf="isAdmin">
+      <i class="fa-solid fa-user-group"></i>
+      <div>
+        <span>Users</span>
+        <h2>{{ usersCount }}</h2>
+      </div>
+    </div>
 
-          <div class="icon">
-            📦
-          </div>
+    <div class="kpi">
+      <i class="fa-solid fa-receipt"></i>
+      <div>
+        <span>Orders</span>
+        <h2>{{ ordersCount }}</h2>
+      </div>
+    </div>
 
-          <div class="info">
-            <h6>Products</h6>
-            <h3>{{productsCount}}</h3>
-          </div>
-
-        </div>
-      </a>
+    <div class="kpi">
+      <i class="fa-solid fa-coins"></i>
+      <div>
+        <span>Revenue</span>
+        <h2>{{ revenue | number:'1.2-2' }}</h2>
+      </div>
     </div>
 
   </div>
 
-  <div class="row g-4" *ngIf="isUser()">
+  <!-- MAIN GRID -->
+  <div class="main-grid">
 
-    <!-- My Orders -->
-    <div class="col-md-4">
-      <a routerLink="/orders" class="card-link">
-        <div class="stat-card orders">
+    <!-- LEFT: ORDERS BREAKDOWN -->
+    <div class="panel">
 
-          <div class="icon">
-            🧾
-          </div>
+      <h3>
+        <i class="fa-solid fa-chart-pie"></i>
+        Orders Breakdown
+      </h3>
 
-          <div class="info">
-            <h6>My Orders</h6>
-            <h3>{{ordersCount}}</h3>
-          </div>
+      <div class="mini-card success">
+        <span>Completed Orders</span>
+        <h2>{{ completedOrdersCount }}</h2>
+      </div>
 
-        </div>
-      </a>
+      <div class="mini-card warning">
+        <span>Pending Orders</span>
+        <h2>{{ pendingOrdersCount }}</h2>
+      </div>
+
+      <div class="mini-card success">
+        <span>Completed Revenue</span>
+        <h2>{{ completedRevenue | number:'1.2-2' }}</h2>
+      </div>
+
+      <div class="mini-card warning">
+        <span>Pending Revenue</span>
+        <h2>{{ pendingRevenue | number:'1.2-2' }}</h2>
+      </div>
+
     </div>
 
-    <!-- Profile -->
-    <div class="col-md-6">
-      <div class="stat-card customers">
+    <!-- CENTER: PRODUCTS -->
+    <div class="panel">
 
-        <div class="icon">
-          👤
-        </div>
+      <h3>
+        <i class="fa-solid fa-boxes-stacked"></i>
+        Inventory
+      </h3>
 
-        <div class="info">
-          <h6>Profile Status</h6>
-          <h3>Complete</h3>
-        </div>
-
+      <div class="mini-card primary">
+        <span>Available Products</span>
+        <h2>{{ availableProductsCount }}</h2>
       </div>
+
+      <div class="mini-card danger">
+        <span>Out Of Stock</span>
+        <h2>{{ unavailableProductsCount }}</h2>
+      </div>
+
+      <div class="mini-card info">
+        <span>Total Products Value View</span>
+        <h2>{{ productsCount }}</h2>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: ADMIN ONLY -->
+    <div class="panel" *ngIf="isAdmin()">
+
+      <h3>
+        <i class="fa-solid fa-shield-halved"></i>
+        Admin Panel
+      </h3>
+
+      <div class="mini-card dark">
+        <span>Customers</span>
+        <h2>{{ customersCount }}</h2>
+      </div>
+
+      <div class="mini-card dark">
+        <span>System Status</span>
+        <h2>Healthy</h2>
+      </div>
+
+      <div class="mini-card dark">
+        <span>Active Users</span>
+        <h2>{{ usersCount }}</h2>
+      </div>
+
     </div>
 
   </div>

@@ -3,7 +3,8 @@
   <div class="page-header d-flex justify-content-between align-items-center mb-4">
     <h2 class="text-secondary fw-bold">📦 Products Dashboard</h2>
 
-    <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addModal">
+    <button *ngIf="isAdmin()" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal"
+      data-bs-target="#addModal">
       + Add Product
     </button>
   </div>
@@ -58,14 +59,32 @@
 
         </div>
 
-        <div class="card-footer card-footer-dark d-flex justify-content-between">
+        <div class="card-footer card-footer-dark d-flex justify-content-between gap-2">
 
-          <button class="btn btn-icon btn-edit" data-bs-toggle="modal" data-bs-target="#editModal"
+          <button class="btn btn-icon btn-edit" *ngIf="isAdmin()" data-bs-toggle="modal" data-bs-target="#editModal"
             (click)="openEdit(p)">
             <i class="fa fa-pen"></i>
           </button>
 
-          <button class="btn btn-icon btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal"
+          <!-- <button class="btn btn-icon w-100" (click)="addToCart(p)" [disabled]="!p.isAvailable">
+
+            @if(p.isAvailable){
+            <i class="fa-solid fa-shopping-cart"></i>
+            } @else {
+            Out of Stock
+            }
+          </button> -->
+          <button class="btn btn-icon w-100" (click)="addToCart(p)" [disabled]="!p.isAvailable || p.stock === 0">
+
+            @if(p.isAvailable && p.stock > 0){
+            <i class="fa-solid fa-shopping-cart"></i>
+            } @else {
+            Out of Stock
+            }
+
+          </button>
+
+          <button class="btn btn-icon btn-delete" *ngIf="isAdmin()" data-bs-toggle="modal" data-bs-target="#deleteModal"
             (click)="openDelete(p)">
             <i class="fa fa-trash"></i>
           </button>

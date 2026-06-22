@@ -1,35 +1,87 @@
-<div class="landing">
+<div class="landing-page">
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero-section">
 
-    <div class="hero-content">
+    <div class="container">
 
-      <h1>Discover & Shop Top Products 🛍️</h1>
+      <div class="row align-items-center min-vh-100">
 
-      <p>
-        Discover products, manage orders, and scale your business from one dashboard.
-      </p>
+        <div class="col-lg-6">
 
-      <div class="hero-actions">
+          <span class="hero-badge">
+            <i class="fa-solid fa-chart-line"></i>
+            Sales & Inventory Management
+          </span>
 
-        <!-- لو مش عامل login -->
-        <ng-container *ngIf="!isLoggedIn()">
-          <a routerLink="/register" class="btn btn-primary">
-            Register
-          </a>
+          <h1>
+            Manage Products,
+            Orders & Customers
+            From One Place
+          </h1>
 
-          <a routerLink="/login" class="btn btn-outline-light">
-            Login
-          </a>
-        </ng-container>
+          <p>
+            Track inventory, manage customer orders,
+            monitor revenue and keep your business
+            organized with a simple dashboard.
+          </p>
 
-        <!-- لو عامل login -->
-        <ng-container *ngIf="isLoggedIn()">
-          <a routerLink="/dashboard" class="btn btn-outline-light">
-            Enter Dashboard
-          </a>
-        </ng-container>
+          <div class="hero-actions">
+
+            <ng-container *ngIf="!isLoggedIn()">
+
+              <a routerLink="/register" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-user-plus me-2"></i>
+                Get Started
+              </a>
+
+              <a routerLink="/login" class="btn btn-outline-light btn-lg">
+                <i class="fa-solid fa-right-to-bracket me-2"></i>
+                Login
+              </a>
+
+            </ng-container>
+
+            <ng-container *ngIf="isLoggedIn()">
+
+              <a routerLink="/dashboard" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-gauge-high me-2"></i>
+                Open Dashboard
+              </a>
+
+            </ng-container>
+
+          </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+          <div class="hero-card">
+
+            <div class="stat-box">
+              <i class="fa-solid fa-box"></i>
+              <span>Products</span>
+            </div>
+
+            <div class="stat-box">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span>Orders</span>
+            </div>
+
+            <div class="stat-box">
+              <i class="fa-solid fa-users"></i>
+              <span>Customers</span>
+            </div>
+
+            <div class="stat-box">
+              <i class="fa-solid fa-dollar-sign"></i>
+              <span>Revenue</span>
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 
@@ -37,108 +89,171 @@
 
   </section>
 
-  <!-- CATEGORIES -->
-  <section class="section">
+  <!-- FEATURES -->
 
-    <h2 class="section-title">Categories</h2>
+  <section class="features-section">
 
-    <div class="grid">
+    <div class="container">
 
-      <div class="card-box">
-        <i class="fa fa-laptop"></i>
-        <h5>Electronics</h5>
+      <div class="section-header">
+        <h2>Core Features</h2>
+        <p>Everything needed to manage daily operations.</p>
       </div>
 
-      <div class="card-box">
-        <i class="fa fa-shirt"></i>
-        <h5>Fashion</h5>
-      </div>
+      <div class="row g-4">
 
-      <div class="card-box">
-        <i class="fa fa-house"></i>
-        <h5>Home</h5>
-      </div>
+        <div class="col-md-6 col-xl-3">
 
-      <div class="card-box">
-        <i class="fa fa-gamepad"></i>
-        <h5>Gaming</h5>
+          <div class="feature-card">
+
+            <i class="fa-solid fa-boxes-stacked"></i>
+
+            <h5>Inventory</h5>
+
+            <p>
+              Track stock levels and product availability.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+
+          <div class="feature-card">
+
+            <i class="fa-solid fa-file-invoice"></i>
+
+            <h5>Orders</h5>
+
+            <p>
+              Create and manage customer orders easily.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+
+          <div class="feature-card">
+
+            <i class="fa-solid fa-user-group"></i>
+
+            <h5>Customers</h5>
+
+            <p>
+              Organize customer information in one place.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+
+          <div class="feature-card">
+
+            <i class="fa-solid fa-chart-column"></i>
+
+            <h5>Reports</h5>
+
+            <p>
+              Monitor performance and revenue metrics.
+            </p>
+
+          </div>
+
+        </div>
+
       </div>
 
     </div>
 
   </section>
 
-  <!-- FEATURED PRODUCTS -->
-  <section class="section">
+  <!-- QUICK ACCESS -->
 
-    <h2 class="section-title">Featured Products</h2>
+  <section class="quick-links">
 
-    <div class="products-grid">
+    <div class="container">
 
-      <div class="product-card">
-        <div class="img"></div>
-        <h5>Wireless Headphones</h5>
-        <p>High quality sound experience</p>
-        <span>$120</span>
+      <div class="section-header">
+        <h2>Quick Access</h2>
       </div>
 
-      <div class="product-card">
-        <div class="img"></div>
-        <h5>Smart Watch</h5>
-        <p>Track your health & activity</p>
-        <span>$99</span>
-      </div>
+      <div class="row g-4">
 
-      <div class="product-card">
-        <div class="img"></div>
-        <h5>Gaming Mouse</h5>
-        <p>Precision for gamers</p>
-        <span>$45</span>
+        <div class="col-md-3">
+
+          <a routerLink="/products" class="quick-card">
+
+            <i class="fa-solid fa-box"></i>
+
+            <span>Products</span>
+
+          </a>
+
+        </div>
+
+        <div class="col-md-3">
+
+          <a routerLink="/orders" class="quick-card">
+
+            <i class="fa-solid fa-cart-shopping"></i>
+
+            <span>Orders</span>
+
+          </a>
+
+        </div>
+
+        <div class="col-md-3">
+
+          <a routerLink="/customers" class="quick-card">
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>Customers</span>
+
+          </a>
+
+        </div>
+
+        <div class="col-md-3">
+
+          <a routerLink="/dashboard" class="quick-card">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>Dashboard</span>
+
+          </a>
+
+        </div>
+
       </div>
 
     </div>
-
-  </section>
-
-  <!-- OFFER BANNER -->
-  <section class="offer">
-
-    <div>
-      <h3>🔥 Summer Sale Up To 40% Off</h3>
-      <p>Limited time offer on selected products</p>
-    </div>
-
-    <button class="btn btn-light">Shop Now</button>
 
   </section>
 
   <!-- FOOTER -->
+
   <footer class="footer">
 
-    <div class="footer-grid">
+    <div class="container text-center">
 
-      <div>
-        <h4>Store</h4>
-        <p>Modern eCommerce dashboard built with Angular & Bootstrap</p>
-      </div>
+      <h5>LastV Management System</h5>
 
-      <div>
-        <h4>Links</h4>
-        <a routerLink="/products">Products</a>
-        <a routerLink="/orders">Orders</a>
-        <a routerLink="/customers">Customers</a>
-      </div>
+      <p>
+        Products • Orders • Customers • Inventory
+      </p>
 
-      <div>
-        <h4>Contact</h4>
-        <p>Email: supportstore.com</p>
-        <p>Phone: +20 100 000 0000</p>
-      </div>
+      <small>
+        © 2026 All Rights Reserved
+      </small>
 
-    </div>
-
-    <div class="copy">
-      © 2026 Store Dashboard. All rights reserved.
     </div>
 
   </footer>

@@ -1,7 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product, ProductService } from '../../services/product/product.service';
 import { CommonModule } from '@angular/common';
+import { CartService } from '../../services/CartService/cart-service.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 declare var bootstrap: any;
 
@@ -14,7 +16,9 @@ declare var bootstrap: any;
 export class ProductsComponent implements OnInit {
 
   private productService = inject(ProductService);
+  private cartService = inject(CartService);
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
 
   products: Product[] = [];
 
@@ -177,4 +181,53 @@ export class ProductsComponent implements OnInit {
     const modal = bootstrap.Modal.getInstance(modalElement);
     modal?.hide();
   }
+
+
+  // ================= Add To Cart =================
+  addToCart(product: any) {
+
+    const cart = JSON.parse(
+      localStorage.getItem('cart') || '[]'
+    );
+
+    const existingItem = cart.find(
+      (x: any) => x.productId === product.id
+    );
+
+    if (existingItem) {
+
+      existingItem.quantity++;
+
+    } else {
+
+      cart.push({
+        productId: product.id,
+        productName: product.name,
+        price: product.price,
+        stock: product.stock,
+        quantity: 1
+      });
+
+    }
+
+    localStorage.setItem(
+      'cart',
+      JSON.stringify(cart)
+    );
+
+    this.cartService.refreshCartCount();
+
+  }
+
+  //roles
+
+  role = this.authService.getUserRole();
+  isAdmin() {
+    return this.role === 'Admin';
+  }
+
+  isUser() {
+    return this.role === 'User';
+  }
+
 }

@@ -274,4 +274,14 @@ export class OrdersComponent implements OnInit {
     const modal = bootstrap.Modal.getInstance(modalElement);
     modal?.hide();
   }
+
+  //roles
+  role = this.authService.getUserRole();
+  isAdmin() {
+    return this.role === 'Admin';
+  }
+
+  isUser() {
+    return this.role === 'User';
+  }
 }
