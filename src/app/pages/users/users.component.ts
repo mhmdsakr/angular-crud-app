@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { User, UserService, PagedResult } from '../../services/user/user.service';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth/auth.service';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule,
+    FormsModule,
+    ReactiveFormsModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
@@ -22,7 +27,8 @@ export class UsersComponent implements OnInit {
   pageSize = 9;
   totalCount = 0;
 
-  constructor(private userService: UserService) { }
+  private fb = inject(FormBuilder);
+  private userService = inject(UserService)
 
   ngOnInit(): void {
     this.loadUsers();
@@ -67,4 +73,172 @@ export class UsersComponent implements OnInit {
     this.pageNumber = page;
     this.loadUsers();
   }
+
+
+  // ================= Add Users =================
+  closeModal(id: string) {
+
+    const modalElement = document.getElementById(id);
+
+    const modal = bootstrap.Modal.getInstance(
+      modalElement
+    );
+
+    modal?.hide();
+  }
+
+  showSuccess = false;
+
+
+  userForm = this.fb.group({
+    fullName: ['', Validators.required],
+
+    email: [
+      '',
+      [
+        Validators.required,
+        Validators.email
+      ]
+    ],
+
+    password: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(6)
+      ]
+    ],
+
+    role: [
+      '',
+      Validators.required
+    ]
+  });
+
+  addUser() {
+
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      return;
+    }
+
+    this.userService
+      .createUser(this.userForm.value)
+      .subscribe({
+
+        next: () => {
+
+          this.loadUsers();
+
+          this.closeModal('addModal');
+
+          this.userForm.reset();
+
+          this.showSuccess = true;
+
+          setTimeout(() => {
+            this.showSuccess = false;
+          }, 5000);
+        },
+
+        error: (err) => {
+          console.log(err);
+        }
+      });
+
+
+    this.userForm.reset({
+      fullName: '',
+      email: '',
+      password: '',
+      role: ''
+    });
+  }
+
+  // ================= Edit Users =================
+  editUserId = '';
+
+  editForm = this.fb.group({
+
+    fullName: ['', Validators.required],
+
+    email: [
+      '',
+      [
+        Validators.required,
+        Validators.email
+      ]
+    ],
+
+    password: [''],
+
+    role: [
+      '',
+      Validators.required
+    ]
+
+  });
+
+  openEdit(user: User) {
+
+    this.editUserId = user.id;
+
+    this.editForm.patchValue({
+
+      fullName: user.fullName,
+
+      email: user.email,
+
+      password: '',
+
+      role: user.roles.length ? user.roles[0] : 'User'
+
+    });
+
+  }
+
+
+  updateUser() {
+
+    if (this.editForm.invalid)
+      return;
+
+    this.userService
+      .updateUser(
+        this.editUserId,
+        this.editForm.value
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.loadUsers();
+
+          this.closeModal('editModal');
+
+        }
+
+      });
+
+  }
+
+
+  // ================= ROLES =================
+  private authService = inject(AuthService);
+  role = this.authService.getUserRole();
+
+  isSuper() {
+    return this.role === 'SuperAdmin';
+  }
+
+  isAdmin() {
+    return this.role === 'Admin';
+  }
+
+  isUser() {
+    return this.role === 'User';
+  }
+
+
 }
+

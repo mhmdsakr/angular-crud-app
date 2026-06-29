@@ -14,7 +14,7 @@
       </p>
     </div>
 
-    @if(errorMessage){
+    <!-- @if(errorMessage){
 
     <div class="custom-alert danger-alert">
 
@@ -36,7 +36,7 @@
 
     </div>
 
-    }
+    } -->
 
     <!-- CUSTOMER -->
     <select class="form-select customer-select" [(ngModel)]="selectedCustomerId">
@@ -62,6 +62,12 @@
 
     <div class="cart-card">
 
+      <!-- PRODUCT IMAGE -->
+      <div class="product-image">
+        <img [src]="item.mainImage ? apiUrl + item.mainImage : defaultImage" [alt]="item.productName">
+      </div>
+
+      <!-- PRODUCT INFO -->
       <div class="cart-info">
 
         <div class="product-name">
@@ -69,11 +75,16 @@
         </div>
 
         <div class="product-price">
-          ${{ item.price }}
+          {{ item.price }} EGP
+        </div>
+
+        <div class="product-stock">
+          Stock : {{ item.stock }}
         </div>
 
       </div>
 
+      <!-- ACTIONS -->
       <div class="cart-actions">
 
         <!-- QTY -->
@@ -93,20 +104,14 @@
 
         <!-- TOTAL -->
         <div class="total">
-          ${{ item.price * item.quantity }}
-        </div>
-
-        <div class="product-price">
-          ${{ item.price }}
-        </div>
-
-        <div class="product-stock">
-          Stock: {{ item.stock }}
+          {{ item.price * item.quantity }} EGP
         </div>
 
         <!-- DELETE -->
         <button class="delete-btn" (click)="removeItem(item.productId)">
+
           <i class="fa fa-trash"></i>
+
         </button>
 
       </div>
@@ -117,42 +122,204 @@
 
   </div>
 
-  <!-- SUMMARY -->
+
   <div class="cart-summary">
 
-    <div class="summary-box">
+    <div class="summary-card">
 
-      <div class="row">
-        <span>Subtotal</span>
-        <strong>${{ subTotal }}</strong>
+      <div class="row g-4">
+
+        <!-- LEFT -->
+        <div class="col-lg-5">
+
+          <h5 class="section-title">
+            <i class="fa-solid fa-file-invoice-dollar me-2"></i>
+            Order Summary
+          </h5>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <strong>{{subTotal}} EGP</strong>
+          </div>
+
+          <div class="summary-row">
+            <span>Discount</span>
+            <strong>{{discount}} EGP</strong>
+          </div>
+
+          <div class="summary-row total">
+            <span>Total</span>
+            <strong>{{total}} EGP</strong>
+          </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-7">
+
+          <h5 class="section-title">
+            <i class="fa-solid fa-credit-card me-2"></i>
+            Payment Method
+          </h5>
+
+          <label class="payment-card">
+
+            <input type="radio" name="payment" value="cash" [(ngModel)]="paymentMethod">
+
+            <div class="payment-content">
+
+              <i class="fa-solid fa-money-bill-wave payment-icon"></i>
+
+              <div>
+
+                <h6>Cash On Delivery</h6>
+
+                <small>Pay after receiving your order.</small>
+
+              </div>
+
+            </div>
+
+          </label>
+
+          <label class="payment-card">
+
+            <input type="radio" name="payment" value="card" [(ngModel)]="paymentMethod">
+
+            <div class="payment-content">
+
+              <i class="fa-solid fa-credit-card payment-icon"></i>
+
+              <div>
+
+                <h6>Credit / Debit Card</h6>
+
+                <small>Visa • MasterCard</small>
+
+              </div>
+
+            </div>
+
+          </label>
+
+          <label class="payment-card">
+
+            <input type="radio" name="payment" value="wallet" [(ngModel)]="paymentMethod">
+
+            <div class="payment-content">
+
+              <i class="fa-solid fa-wallet payment-icon"></i>
+
+              <div>
+
+                <h6>Wallet</h6>
+
+                <small>Vodafone Cash • Instapay</small>
+
+              </div>
+
+            </div>
+
+          </label>
+
+        </div>
+
       </div>
 
-      <div class="row">
-        <span>Discount</span>
-        <strong>${{ discount }}</strong>
-      </div>
+      <hr>
 
-      <div class="row total">
-        <span>Total</span>
-        <strong>${{ total }}</strong>
-      </div>
+      <div class="checkout-actions">
 
-    </div>
+        <a routerLink="/products" class="flex-fill">
 
-    <div class="actions">
+          <button class="btn btn-outline-light w-100">
 
-      <a routerLink="/products">
-        <button class="btn btn-outline-light">
-          Continue Shopping
+            <i class="fa-solid fa-arrow-left me-2"></i>
+
+            Continue Shopping
+
+          </button>
+
+        </a>
+
+        <button class="btn btn-primary flex-fill" (click)="createOrder()" [disabled]="cartItems.length==0">
+
+          <i class="fa-solid fa-bag-shopping me-2"></i>
+
+          Create Order
+
         </button>
-      </a>
 
-      <button class="btn btn-primary ms-2" (click)="createOrder()" [disabled]="cartItems.length === 0">
-        Create Order
-      </button>
+      </div>
 
     </div>
 
   </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- TOASTS -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+    <!-- ERROR -->
+    <div class="toast-modern shadow-lg danger" *ngIf="errorMessage">
+
+      <div class="toast-icon danger">
+        <i class="fa-solid fa-circle-exclamation"></i>
+      </div>
+
+      <div class="toast-content">
+        <div class="toast-title">
+          Error
+        </div>
+
+        <div class="toast-message">
+          {{ errorMessage }}
+        </div>
+      </div>
+
+      <button class="toast-close" (click)="errorMessage=''">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="toast-modern shadow-lg success" *ngIf="successMessage">
+
+      <div class="toast-icon success">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <div class="toast-content">
+        <div class="toast-title">
+          Success
+        </div>
+
+        <div class="toast-message">
+          {{ successMessage }}
+        </div>
+      </div>
+
+      <button class="toast-close" (click)="successMessage=''">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+    </div>
+
+  </div>
 </div>

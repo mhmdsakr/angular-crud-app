@@ -1,0 +1,373 @@
+<div class="container mt-4">
+
+  <!-- HEADER -->
+  <div class="page-header d-flex justify-content-between align-items-center mb-4">
+
+    <h2 class="fw-bold text-secondary">🏭 Suppliers Dashboard</h2>
+
+    <button class="add-btn" data-bs-toggle="modal" data-bs-target="#addModal">
+      + Add Supplier
+    </button>
+
+  </div>
+
+  <!-- SEARCH -->
+  <input class="form-control mb-4" placeholder="Search by name, phone, email..." [(ngModel)]="searchText"
+    (input)="onSearchChange()" />
+
+  <!-- ERROR -->
+  @if(errorMessage){
+  <div class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  }
+
+  <!-- LOADING -->
+  @if(loading){
+  <div class="text-center p-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2">Loading suppliers...</p>
+  </div>
+  }
+
+  <!-- GRID -->
+  <div class="row g-3 ">
+
+    @for (s of suppliers; track s.id) {
+
+    <div class="col-md-4">
+      <div class="supplier-card-modern">
+
+        <!-- TOP -->
+
+        <div class="supplier-header">
+
+          <div class="avatar">
+
+            {{ s.name ? s.name.charAt(0).toUpperCase() : '?' }}
+
+          </div>
+
+          <div class="supplier-info">
+
+            <h5>{{ s.name }}</h5>
+
+            <span>#{{ s.id }}</span>
+
+          </div>
+
+        </div>
+
+        <!-- BODY -->
+
+        <div class="supplier-body">
+
+          <div class="info-item">
+
+            <i class="fa fa-phone"></i>
+
+            <span>{{ s.phone || 'No Phone' }}</span>
+
+          </div>
+
+          <div class="info-item">
+
+            <i class="fa fa-envelope"></i>
+
+            <span>{{ s.email || 'No Email' }}</span>
+
+          </div>
+
+          <div class="info-item">
+
+            <i class="fa fa-location-dot"></i>
+
+            <span>{{ s.address || 'No Address' }}</span>
+
+          </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+
+        <div class="supplier-actions">
+
+          <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editModal" (click)="openEdit(s)">
+
+            <i class="fa fa-pen"></i>
+
+          </button>
+
+          <button class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDelete(s)">
+
+            <i class="fa fa-trash"></i>
+
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+
+    }
+
+  </div>
+
+  <!-- EMPTY STATE -->
+  @if(!loading && suppliers.length === 0){
+  <div class="text-center p-5 text-secondary">
+    <h5>No Suppliers Found</h5>
+  </div>
+  }
+
+  <!-- PAGINATION -->
+  <div class="pagination-container mt-4">
+
+    <button class="btn btn-outline-secondary" (click)="changePage(1)" [disabled]="pageNumber === 1">
+      ⏮
+    </button>
+
+    <button class="btn btn-outline-secondary" (click)="changePage(pageNumber - 1)" [disabled]="pageNumber === 1">
+      ‹
+    </button>
+
+    <span class="mx-3">
+      Page {{ pageNumber }} / {{ totalPages }}
+    </span>
+
+    <button class="btn btn-outline-secondary" (click)="changePage(pageNumber + 1)"
+      [disabled]="pageNumber === totalPages">
+      ›
+    </button>
+
+    <button class="btn btn-outline-secondary" (click)="changePage(totalPages)" [disabled]="pageNumber === totalPages">
+      ⏭
+    </button>
+
+  </div>
+  <br>
+
+  <!-- ================= ADD MODAL ================= -->
+  <div class="modal fade" id="addModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0">
+
+        <div class="modal-header border-0">
+          <div>
+            <h4 class="fw-bold mb-1">➕ Add Supplier</h4>
+            <small class="text-secondary">Create new supplier</small>
+          </div>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body p-4">
+
+          <form [formGroup]="supplierForm">
+
+            <!-- NAME -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Name</label>
+
+              <input class="form-control" formControlName="name" placeholder="Supplier name">
+
+              <small class="text-danger" *ngIf="supplierForm.get('name')?.touched && supplierForm.get('name')?.invalid">
+                Name is required (min 3 chars)
+              </small>
+            </div>
+
+            <!-- PHONE -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Phone</label>
+              <input class="form-control" formControlName="phone">
+            </div>
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Email</label>
+              <input class="form-control" formControlName="email">
+
+              <small class="text-danger"
+                *ngIf="supplierForm.get('email')?.touched && supplierForm.get('email')?.errors?.['email']">
+                Invalid email format
+              </small>
+            </div>
+
+            <!-- ADDRESS -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Address</label>
+              <input class="form-control" formControlName="address">
+            </div>
+
+          </form>
+
+        </div>
+
+        <div class="modal-footer border-0">
+          <button class="btn btn-secondary w-50" data-bs-dismiss="modal">
+            Cancel
+          </button>
+
+          <button class="btn btn-primary w-50" (click)="addSupplier()" [disabled]="supplierForm.invalid">
+            Save
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= EDIT MODAL ================= -->
+  <div class="modal fade" id="editModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0">
+
+        <div class="modal-header border-0">
+          <div>
+            <h4 class="fw-bold mb-1">✏ Edit Supplier</h4>
+            <small class="text-secondary">Update supplier info</small>
+          </div>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body p-4">
+
+          <form [formGroup]="editForm">
+
+            <div class="mb-3">
+              <label>Name</label>
+              <input class="form-control" formControlName="name">
+            </div>
+
+            <div class="mb-3">
+              <label>Phone</label>
+              <input class="form-control" formControlName="phone">
+            </div>
+
+            <div class="mb-3">
+              <label>Email</label>
+              <input class="form-control" formControlName="email">
+            </div>
+
+            <div class="mb-3">
+              <label>Address</label>
+              <input class="form-control" formControlName="address">
+            </div>
+
+          </form>
+
+        </div>
+
+        <div class="modal-footer border-0">
+          <button class="btn btn-secondary w-50" data-bs-dismiss="modal">
+            Cancel
+          </button>
+
+          <button class="btn btn-success w-50" (click)="updateSupplier()" [disabled]="editForm.invalid">
+            Update
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DELETE MODAL ================= -->
+  <div class="modal fade" id="deleteModal">
+    <div class="modal-dialog modal-dialog-centered">
+
+      <div class="modal-content border-0">
+
+        <div class="modal-body text-center p-4">
+
+          <div class="mb-3">
+            <i class="fa fa-triangle-exclamation text-danger fa-3x"></i>
+          </div>
+
+          <h4 class="fw-bold">Delete Supplier?</h4>
+
+          <p class="text-secondary">
+            Are you sure you want to delete
+            <strong>{{ deleteSupplier?.name }}</strong> ?
+          </p>
+
+          <div class="d-flex gap-2 mt-4">
+
+            <button class="btn btn-secondary w-50" data-bs-dismiss="modal">
+              Cancel
+            </button>
+
+            <button class="btn btn-danger w-50" (click)="confirmDelete()">
+              Delete
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= TOASTS ================= -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+    <!-- ADD -->
+    <div class="toast-modern shadow-lg success" *ngIf="showSuccess">
+
+      <div class="toast-icon success">
+        <i class="fa fa-circle-check"></i>
+      </div>
+
+      <div class="toast-content">
+        <div class="toast-title">Success</div>
+        <div class="toast-message">Product added successfully</div>
+      </div>
+
+      <button class="toast-close" (click)="showSuccess = false">
+        <i class="fa fa-xmark"></i>
+      </button>
+
+    </div>
+
+
+    <!-- UPDATE -->
+    <div class="toast-modern shadow-lg warning" *ngIf="showUpdateSuccess">
+
+      <div class="toast-icon warning">
+        <i class="fa fa-pen"></i>
+      </div>
+
+      <div class="toast-content">
+        <div class="toast-title">Updated</div>
+        <div class="toast-message">Product updated successfully</div>
+      </div>
+
+      <button class="toast-close" (click)="showUpdateSuccess = false">
+        <i class="fa fa-xmark"></i>
+      </button>
+
+    </div>
+
+
+    <!-- DELETE -->
+    <div class="toast-modern shadow-lg danger" *ngIf="showDeleteSuccess">
+
+      <div class="toast-icon danger">
+        <i class="fa fa-trash"></i>
+      </div>
+
+      <div class="toast-content">
+        <div class="toast-title">Deleted</div>
+        <div class="toast-message">Product deleted successfully</div>
+      </div>
+
+      <button class="toast-close" (click)="showDeleteSuccess = false">
+        <i class="fa fa-xmark"></i>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

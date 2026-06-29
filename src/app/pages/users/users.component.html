@@ -1,87 +1,405 @@
-<div class="search-box">
+<div class="container mt-4">
 
-  <input type="text" class="form-control search-input" placeholder="Search products by name or category..."
-    [(ngModel)]="search" (input)="onSearchChange()" />
+  <!-- HEADER -->
+  <div class="page-header d-flex justify-content-between align-items-center mb-4">
 
-</div>
+    <h2 class="fw-bold text-secondary"> Users Dashboard</h2>
 
-<!-- USERS CARDS -->
-<div class="users-grid p-3" *ngIf="users.length > 0">
+    <button class="add-btn" data-bs-toggle="modal" data-bs-target="#addModal">
+      + Add Users
+    </button>
 
-  <div class="user-card" *ngFor="let u of users">
+  </div>
+  <div class="search-box">
 
-    <div class="user-avatar">
-      {{ u.fullName.charAt(0).toUpperCase() }}
-    </div>
+    <input type="text" class="form-control search-input" placeholder="Search users by name , email or role..."
+      [(ngModel)]="search" (input)="onSearchChange()" />
 
-    <div class="user-info">
-      <h3>{{ u.fullName }}</h3>
-      <p class="email">{{ u.email }}</p>
+  </div>
 
-      <div class="roles">
-        <span *ngFor="let r of u.roles" class="role-badge" [ngClass]="{ 'admin-badge': r === 'Admin' }">
+  <!-- USERS CARDS -->
+  <div class="users-grid p-3" *ngIf="users.length > 0">
+
+    <div class="user-card" *ngFor="let u of users">
+
+      <!-- HEADER -->
+      <div class="user-top">
+
+        <div class="d-flex align-items-center gap-3">
+
+          <div class="user-avatar">
+            {{ u.fullName.charAt(0).toUpperCase() }}
+          </div>
+
+          <div>
+
+            <h3>{{ u.fullName }}</h3>
+
+            <p class="email mb-0">
+              <i class="fa-regular fa-envelope me-1"></i>
+              {{ u.email }}
+            </p>
+
+          </div>
+
+        </div>
+
+        <button *ngIf="isAdmin() || isSuper()" class="btn-action edit" data-bs-toggle="modal" data-bs-target="#editModal" (click)="openEdit(u)">
+
+          <i class="fa-solid fa-user-pen"></i>
+
+        </button>
+
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- INFO -->
+
+      <div class="user-body">
+
+        <div class="info-row">
+
+          <span class="label">
+            User ID
+          </span>
+
+          <span class="value id">
+            #{{ u.id.substring(0,8) }}
+          </span>
+
+        </div>
+
+        <div class="info-row">
+
+          <span class="label">
+            Status
+          </span>
+
+          <span class="status-badge">
+
+            <i class="fa-solid fa-circle"></i>
+
+            Active
+
+          </span>
+
+        </div>
+
+      </div>
+
+      <!-- ROLES -->
+
+      <div class="roles mt-3">
+
+        <span *ngFor="let r of u.roles" class="role-badge" [ngClass]="{
+            'admin-badge': r === 'Admin',
+            'super-badge': r === 'SuperAdmin',
+            'user-badge': r === 'User'
+          }">
+
           {{ r }}
+
         </span>
+
       </div>
+
     </div>
 
   </div>
 
-</div>
 
-<!-- EMPTY -->
-<div class="empty-state" *ngIf="users.length === 0 && !loading">
-  <div class="empty-icon">👤</div>
-  <h4>No Users Found</h4>
-  <p>Try adjusting search or add new users</p>
-</div>
 
-<!-- LOADING -->
-<div *ngIf="loading" class="users-grid p-3">
 
-  <div class="user-skeleton" *ngFor="let i of [1,2,3,4,5,6]">
 
-    <div class="skeleton-avatar"></div>
 
-    <div class="skeleton-info">
-      <div class="skeleton-line w-70"></div>
-      <div class="skeleton-line w-50"></div>
 
-      <div class="skeleton-badges">
-        <div class="skeleton-badge"></div>
-        <div class="skeleton-badge"></div>
+
+
+  <!-- EMPTY -->
+  <div class="empty-state" *ngIf="users.length === 0 && !loading">
+    <div class="empty-icon">👤</div>
+    <h4>No Users Found</h4>
+    <p>Try adjusting search or add new users</p>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="users-grid p-3">
+
+    <div class="user-skeleton" *ngFor="let i of [1,2,3,4,5,6]">
+
+      <div class="skeleton-avatar"></div>
+
+      <div class="skeleton-info">
+        <div class="skeleton-line w-70"></div>
+        <div class="skeleton-line w-50"></div>
+
+        <div class="skeleton-badges">
+          <div class="skeleton-badge"></div>
+          <div class="skeleton-badge"></div>
+        </div>
       </div>
+
     </div>
 
   </div>
 
-</div>
+  <!-- PAGINATION -->
+  @if(users.length > 0){
 
-<!-- PAGINATION -->
-@if(users.length > 0){
+  <div class="pagination-container mt-4">
 
-<div class="pagination-container mt-4">
+    <button class="page-btn" (click)="changePage(1)" [disabled]="pageNumber === 1">
+      ⏮
+    </button>
 
-  <button class="page-btn" (click)="changePage(1)" [disabled]="pageNumber === 1">
-    ⏮
-  </button>
+    <button class="page-btn" (click)="changePage(pageNumber - 1)" [disabled]="pageNumber === 1">
+      <i class="fa fa-chevron-left"></i>
+    </button>
 
-  <button class="page-btn" (click)="changePage(pageNumber - 1)" [disabled]="pageNumber === 1">
-    <i class="fa fa-chevron-left"></i>
-  </button>
+    <div class="page-info">
+      Page <strong>{{ pageNumber }}</strong> / {{ totalPages }}
+    </div>
 
-  <div class="page-info">
-    Page <strong>{{ pageNumber }}</strong> / {{ totalPages }}
+    <button class="page-btn" (click)="changePage(pageNumber + 1)" [disabled]="pageNumber === totalPages">
+      <i class="fa fa-chevron-right"></i>
+    </button>
+
+    <button class="page-btn" (click)="changePage(totalPages)" [disabled]="pageNumber === totalPages">
+      ⏭
+    </button>
+
   </div>
 
-  <button class="page-btn" (click)="changePage(pageNumber + 1)" [disabled]="pageNumber === totalPages">
-    <i class="fa fa-chevron-right"></i>
-  </button>
+  }
 
-  <button class="page-btn" (click)="changePage(totalPages)" [disabled]="pageNumber === totalPages">
-    ⏭
-  </button>
 
+  <!-- ADD MODAl -->
+  <div class="modal fade" id="addModal">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+      <div class="modal-content border-0 add-modal">
+
+        <div class="modal-body p-4">
+
+          <div class="mb-4">
+
+            <h3 class="fw-bold">
+              Add New User
+            </h3>
+
+            <p class="text-muted mb-0">
+              Create a new account
+            </p>
+
+          </div>
+
+          <form [formGroup]="userForm">
+
+            <!-- Full Name -->
+            <label class="fw-semibold mb-2">
+              Full Name
+            </label>
+
+            <input type="text" class="form-control modern-input mb-3" formControlName="fullName">
+
+            <!-- Email -->
+            <label class="fw-semibold mb-2">
+              Email
+            </label>
+
+            <input type="email" class="form-control modern-input mb-3" formControlName="email">
+
+            <!-- Password -->
+            <label class="fw-semibold mb-2">
+              Password
+            </label>
+
+            <input type="password" class="form-control modern-input mb-3" formControlName="password">
+
+            <!-- Role -->
+            <label class="fw-semibold mb-2">
+              Role
+            </label>
+
+            <select class="form-select modern-input" formControlName="role">
+
+              <option value="">
+                Select Role
+              </option>
+
+              <option value="User" *ngIf="isAdmin() || isSuper()">
+                User
+              </option>
+
+              <option value="Admin" *ngIf="isSuper()">
+                Admin
+              </option>
+
+              <option value="SuperAdmin" *ngIf="isSuper()">
+                Super Admin
+              </option>
+
+            </select>
+
+            <div class="d-flex gap-2 mt-4">
+
+              <button type="button" class="btn cancel-btn w-50" data-bs-dismiss="modal">
+
+                Cancel
+
+              </button>
+
+              <button type="button" class="btn save-btn w-50" [disabled]="userForm.invalid" (click)="addUser()">
+
+                Create User
+
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- EDIT MODAL -->
+  <div class="modal fade" id="editModal">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+      <div class="modal-content border-0 add-modal">
+
+        <div class="modal-body p-4">
+
+          <div class="mb-4">
+
+            <h3 class="fw-bold">
+
+              Edit User
+
+            </h3>
+
+            <p class="text-muted mb-0">
+
+              Update user information
+
+            </p>
+
+          </div>
+
+          <form [formGroup]="editForm">
+
+            <!-- Full Name -->
+
+            <label class="fw-semibold mb-2">
+
+              Full Name
+
+            </label>
+
+            <input class="form-control modern-input mb-3" type="text" formControlName="fullName">
+
+            <!-- Email -->
+
+            <label class="fw-semibold mb-2">
+
+              Email
+
+            </label>
+
+            <input class="form-control modern-input mb-3" type="email" formControlName="email">
+
+            <!-- Password -->
+
+            <label class="fw-semibold mb-2">
+
+              New Password
+              <small class="text-secondary">
+                (Optional)
+              </small>
+
+            </label>
+
+            <input class="form-control modern-input" type="password" formControlName="password"
+              placeholder="Leave empty to keep current password">
+
+            <label class="fw-semibold mb-2 mt-3">
+              Role
+            </label>
+
+            <select class="form-select modern-input mb-3" formControlName="role">
+
+              <option value="User">
+                User
+              </option>
+
+              <option value="Admin" *ngIf="isSuper()">
+                Admin
+              </option>
+
+              <option value="SuperAdmin" *ngIf="isSuper()">
+                Super Admin
+              </option>
+
+            </select>
+
+            <div class="d-flex gap-2 mt-4">
+
+              <button class="btn cancel-btn w-50" type="button" data-bs-dismiss="modal">
+
+                Cancel
+
+              </button>
+
+              <button class="btn save-btn w-50" type="button" (click)="updateUser()">
+
+                <i class="fa-solid fa-floppy-disk me-2"></i>
+
+                Save Changes
+
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- toasts -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+    <!-- ADD -->
+    <div class="toast-modern shadow-lg success" *ngIf="showSuccess">
+
+      <div class="toast-icon success">
+        <i class="fa fa-circle-check"></i>
+      </div>
+
+      <div class="toast-content">
+        <div class="toast-title">Success</div>
+        <div class="toast-message">Product added successfully</div>
+      </div>
+
+      <button class="toast-close" (click)="showSuccess = false">
+        <i class="fa fa-xmark"></i>
+      </button>
+
+    </div>
+  </div>
 </div>
-
-}

@@ -1,156 +1,183 @@
 .order-card {
-
   background: #111827;
-
   border: 1px solid #1f2937;
-
   border-radius: 18px;
-
-  padding: 18px;
-
-  transition: .3s;
-
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  transition: .25s;
+  height: 100%;
 }
 
 .order-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+  border-color: #374151;
 }
 
-/* HEADER */
 .order-header {
-
   display: flex;
   justify-content: space-between;
-  align-items: center;
-
-  margin-bottom: 15px;
+  align-items: start;
+  margin-bottom: 18px;
 }
 
 .order-id {
+  color: #fff;
+  font-size: 20px;
   font-weight: 700;
-  font-size: 16px;
-  color: #f9fafb;
 }
 
-/* text */
-.text-secondary {
+.order-date {
   color: #9ca3af;
 }
 
-/* STATUS */
 .status {
-
-  padding: 5px 12px;
-
-  border-radius: 999px;
-
-  font-size: 12px;
-
-  background: rgba(245, 158, 11, 0.15);
-
-  color: #f59e0b;
-
-  border: 1px solid #f59e0b;
+  padding: 7px 14px;
+  border-radius: 30px;
+  background: #78350f;
+  color: #fbbf24;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .status.done {
-
-  background: rgba(34, 197, 94, 0.15);
-
-  color: #22c55e;
-
-  border: 1px solid #22c55e;
+  background: #064e3b;
+  color: #34d399;
 }
 
-/* BODY */
-.order-body {
-
+.customer-box {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
-.row-info {
-
+.customer-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+}
 
-  font-size: 14px;
-
+.customer-label {
   color: #9ca3af;
+  font-size: 13px;
 }
 
-.row-info b {
-  color: #f9fafb;
+.customer-name {
+  color: white;
+  font-weight: 600;
+}
+
+.order-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.stat-item span {
+  display: block;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.stat-item strong {
+  color: white;
+  font-size: 18px;
 }
 
 .price {
-  color: #22c55e;
+  color: #22c55e !important;
 }
 
-/* ACTIONS */
-.order-actions {
-
-  margin-top: 15px;
-
+.created-by {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  color: #9ca3af;
+  font-size: 14px;
+  margin-bottom: 18px;
 }
 
-/* BUTTONS */
-.btn-icon {
+.order-actions {
+  display: flex;
+  gap: 10px;
+}
 
-  width: 30%;
-  height: 40px;
-
+.btn-action {
+  border: 0;
   border-radius: 12px;
+  height: 44px;
+  transition: .2s;
+}
 
-  border: 1px solid #374151;
-
-  background: #0b1220;
-
-  color: #f9fafb;
-
-  transition: .3s;
+.btn-action {
+  border: none;
+  border-radius: 12px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  transition: .25s ease;
 }
 
-.btn-icon:hover {
-  transform: scale(1.05);
+/* VIEW */
+.view {
+
+  background: rgba(16, 185, 129, .15);
+
+  color: #34d399;
 }
 
-.btn-icon.view:hover {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, .15);
+.view:hover {
+
+  background: #10b981;
+
+  color: white;
 }
 
-.btn-icon.edit:hover {
-  color: #f59e0b;
-  background: rgba(245, 158, 11, .15);
+/* EDIT */
+.edit {
+
+  background: rgba(99, 102, 241, .15);
+
+  color: #818cf8;
 }
 
-.btn-icon.delete:hover {
-  color: #ef4444;
+.edit:hover {
+
+  background: #6366f1;
+
+  color: white;
+}
+
+/* DELETE */
+.delete {
+
   background: rgba(239, 68, 68, .15);
+
+  color: #f87171;
 }
 
+.delete:hover {
 
+  background: #ef4444;
 
-
-
-
-
-
-
-
-
-
-
-
+  color: white;
+}
 
 
 .delete-modal {
@@ -944,4 +971,248 @@
   border-radius: 10px;
   cursor: pointer;
   transition: 0.2s;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Details modal */
+.order-modal {
+
+  background: #111827;
+
+  color: #fff;
+
+  border: 1px solid #1f2937;
+
+  border-radius: 22px;
+}
+
+.order-modal .modal-header {
+
+  padding: 25px 30px;
+  border-bottom: 1px solid #1f2937;
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-badge {
+
+  padding: 10px 18px;
+
+  border-radius: 30px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+.status-badge.success {
+
+  background: #14532d;
+
+  color: #4ade80;
+}
+
+.status-badge.pending {
+
+  background: #78350f;
+
+  color: #facc15;
+}
+
+
+
+.info-card {
+
+  background: #0f172a;
+
+  border: 1px solid #1f2937;
+
+  border-radius: 16px;
+
+  padding: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+.info-card .icon {
+
+  width: 50px;
+
+  height: 50px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: #2563eb22;
+
+  color: #60a5fa;
+
+  font-size: 20px;
+}
+
+
+
+.order-table {
+
+  margin-top: 10px;
+
+  border-radius: 15px;
+
+  overflow: hidden;
+}
+
+.order-table thead {
+
+  background: #1e293b;
+}
+
+.order-table tbody tr {
+
+  border-color: #1f2937;
+}
+
+.order-table tbody tr:hover {
+
+  background: #172033;
+}
+
+
+
+.category-pill {
+
+  background: #1e293b;
+
+  color: #93c5fd;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+}
+
+
+
+.summary-card {
+
+  background: #0f172a;
+
+  border: 1px solid #1f2937;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+.summary-card span {
+
+  display: block;
+
+  color: #9ca3af;
+
+  margin-bottom: 4px;
+}
+
+.summary-card h3 {
+
+  color: #4ade80;
+
+  margin: 0;
+
+  font-weight: 700;
+}
+
+.modal-footer {
+
+  padding: 20px 30px 28px;
+
+  border-top: 1px solid #1f2937;
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 12px;
+}
+
+.footer-btn {
+
+  min-width: 170px;
+
+  height: 48px;
+
+  border-radius: 12px;
+
+  font-weight: 600;
+
+  transition: .3s;
+}
+
+.btn-outline-secondary {
+
+  border: 1px solid #374151;
+
+  background: #111827;
+
+  color: #d1d5db;
+}
+
+.btn-outline-secondary:hover {
+
+  background: #1f2937;
+
+  color: #fff;
+}
+
+.btn-primary {
+
+  background: #2563eb;
+
+  border: none;
+}
+
+.btn-primary:hover {
+
+  background: #1d4ed8;
+
+  transform: translateY(-2px);
 }

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,7 @@ export class HomeComponent implements OnInit {
     this.getProduct();
     this.getOrders();
     this.getUser();
+    this.getAllSuppliers();
 
     this.role = this.authService.getUserRole();
   }
@@ -33,21 +35,40 @@ export class HomeComponent implements OnInit {
 
   isUser(): boolean {
     return this.role === 'User';
+  }
 
+  isSuper() {
+    return this.role === 'SuperAdmin';
   }
 
   // ------------------------------- Customers------------------------------------------------
   customersCount = 0;
 
   getAllCustomers() {
-    this.http.get<any[]>("https://localhost:7298/api/customers")
-      .subscribe(
-        result => {
-          // this.customers = result;
-          this.customersCount = result.length;
+    this.http.get<any>("https://localhost:7298/api/customers",
+      {
+        params: {
+          pageNumber: 1,
+          pageSize: 1,
+          search: ''
         }
-      )
+      }
+    ).subscribe(result => {
+      this.customersCount = result.totalCount;
+    });
+
   }
+
+  // ------------------------------- Suppliers ------------------------------------------------
+  suppliersCount = 0;
+
+  getAllSuppliers() {
+    this.http.get<any>("https://localhost:7298/api/suppliers")
+      .subscribe(result => {
+        this.suppliersCount = result.totalCount;
+      });
+  }
+
 
   // ------------------------------- Products ------------------------------------------------
   productsCount = 0;
@@ -55,18 +76,22 @@ export class HomeComponent implements OnInit {
   unavailableProductsCount = 0;
 
   getProduct() {
-    this.http.get<any[]>("https://localhost:7298/api/product")
+
+    this.http.get<any>("https://localhost:7298/api/product?pageSize=1000")
       .subscribe(result => {
 
-        this.productsCount = result.length;
+        const products = result.items;
+
+        this.productsCount = result.totalCount;
 
         this.availableProductsCount =
-          result.filter(x => x.isAvailable).length;
+          products.filter((x: any) => x.isAvailable).length;
 
         this.unavailableProductsCount =
-          result.filter(x => !x.isAvailable).length;
+          products.filter((x: any) => !x.isAvailable).length;
 
       });
+
   }
 
   // ------------------------------- Users ------------------------------------------------
@@ -101,7 +126,7 @@ export class HomeComponent implements OnInit {
         const role = this.authService.getUserRole();
 
         // ================= FILTER =================
-        if (role === 'Admin') {
+        if (role === 'Admin' || role === 'SuperAdmin') {
           this.orders = result;
         } else {
           this.orders = result.filter(o => o.createdById === userId);

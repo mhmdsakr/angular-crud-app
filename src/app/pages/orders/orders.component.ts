@@ -83,19 +83,32 @@ export class OrdersComponent implements OnInit {
     this.orderService.getOrders().subscribe({
       next: (res) => {
 
-        // ================= ADMIN =================
-        if (role === 'Admin') {
+        // ================= SUPER ADMIN & ADMIN =================
+        if (role === 'SuperAdmin' || role === 'Admin') {
+
           this.orders = res;
           this.filteredOrders = res;
+
         }
 
         // ================= USER =================
-        else {
+        else if (role === 'User') {
+
           this.orders = res.filter(o => o.createdById === userId);
           this.filteredOrders = this.orders;
+
+        }
+
+        // ================= UNKNOWN ROLE =================
+        else {
+
+          this.orders = [];
+          this.filteredOrders = [];
+
         }
 
         this.loading = false;
+
       },
 
       error: (err) => {
@@ -113,7 +126,8 @@ export class OrdersComponent implements OnInit {
       return (
         o.id.toString().includes(value) ||
         o.customer.name.toLowerCase().includes(value) ||
-        (o.status ? 'done' : 'pending').includes(value)
+        (o.status ? 'completed' : 'pending').includes(value)||
+        o.createdByName.toLocaleLowerCase().includes(value)
       );
     });
 
@@ -121,8 +135,15 @@ export class OrdersComponent implements OnInit {
   }
 
   loadCustomers() {
-    this.orderService.getCustomers()
-      .subscribe(res => this.customers = res);
+    this.orderService.getCustomers({
+      pageNumber: 1,
+      pageSize: 1000,
+      search: ''
+    }).subscribe(res => {
+
+      this.customers = res.items;
+
+    });
   }
 
   loadProducts() {
@@ -135,7 +156,10 @@ export class OrdersComponent implements OnInit {
 
   openOrder(id: number) {
     this.orderService.getOrderById(id)
-      .subscribe(res => this.selectedOrder = res);
+      .subscribe(res => {
+        // console.log(res);
+        this.selectedOrder = res;
+      });
   }
 
   // ================= CREATE ORDER FORM =================
@@ -211,6 +235,8 @@ export class OrdersComponent implements OnInit {
   });
 
   openStatusModal(o: Order) {
+    console.log('OPEN STATUS', o);
+
     this.selectedStatusOrder = o;
 
     this.statusForm.setValue({
@@ -275,8 +301,46 @@ export class OrdersComponent implements OnInit {
     modal?.hide();
   }
 
-  //roles
+
+
+  // ================= Download Invoice =================
+
+  downloadInvoice(id: number) {
+
+    this.orderService.downloadInvoice(id).subscribe({
+
+      next: (blob) => {
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+
+        link.href = url;
+
+        link.download = `INV-${id.toString().padStart(6, '0')}.pdf`;
+
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+
+      },
+
+      error: () => {
+
+        alert('Failed to download invoice.');
+
+      }
+
+    });
+
+  }
+
+  // ================= Roles =================
   role = this.authService.getUserRole();
+  isSuper() {
+    return this.role === 'SuperAdmin';
+  }
+
   isAdmin() {
     return this.role === 'Admin';
   }

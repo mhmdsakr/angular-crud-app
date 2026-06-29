@@ -1,0 +1,413 @@
+<div class="container mt-4">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <h2 class="text-light fw-bold mb-1">
+        📂 Categories Dashboard
+      </h2>
+
+      <small class="text-secondary">
+        Manage your product categories
+      </small>
+    </div>
+
+    <div class="d-flex justify-content-end w-100 mb-3">
+      <button class="add-btn" data-bs-toggle="modal" data-bs-target="#addModal">
+
+        <i class="fa fa-plus me-2"></i>
+        Add Category
+
+      </button>
+    </div>
+
+  </div>
+
+  <!-- SEARCH -->
+
+  <div class="search-box mb-4">
+
+    <input type="text" class="form-control search-input" placeholder="Search categories..." [(ngModel)]="searchText"
+      (ngModelChange)="onSearch()">
+
+  </div>
+
+  <!-- CARDS -->
+
+  <div class="row g-4">
+
+    @for(c of categories; track c.id){
+
+    <div class="col-md-6 col-lg-4">
+      <div class="category-card">
+
+        <div class="category-header">
+
+          <div class="category-avatar">
+            {{ c.name.charAt(0) }}
+          </div>
+
+          <span class="category-id">
+            #{{ c.id }}
+          </span>
+
+        </div>
+
+        <div class="category-content">
+
+          <h5 class="category-name">
+            {{ c.name }}
+          </h5>
+
+          <p class="category-desc">
+            Product Category
+          </p>
+
+        </div>
+
+        <div class="actions">
+
+          <button class="edit" data-bs-toggle="modal" data-bs-target="#editModal" (click)="openEdit(c)">
+            <i class="fa fa-pen"></i>
+          </button>
+
+          <button class="delete" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDelete(c)">
+            <i class="fa fa-trash"></i>
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+
+    }
+
+  </div>
+
+  <!-- EMPTY -->
+
+  @if(!loading && categories.length === 0){
+
+  <div class="empty-state">
+
+    <div class="empty-icon">
+      📂
+    </div>
+
+    <h4>No Categories Found</h4>
+
+    <p>Try another search keyword</p>
+
+  </div>
+
+  }
+
+  <!-- PAGINATION -->
+
+  @if(totalPages > 1){
+
+  <div class="pagination-container mt-4">
+
+    <button class="page-btn" (click)="changePage(1)" [disabled]="pageNumber === 1">
+      ⏮
+    </button>
+
+    <button class="page-btn" (click)="changePage(pageNumber - 1)" [disabled]="pageNumber === 1">
+
+      <i class="fa fa-chevron-left"></i>
+
+    </button>
+
+    <div class="page-info">
+
+      Page
+      <strong>{{ pageNumber }}</strong>
+      / {{ totalPages }}
+
+    </div>
+
+    <button class="page-btn" (click)="changePage(pageNumber + 1)" [disabled]="pageNumber === totalPages">
+
+      <i class="fa fa-chevron-right"></i>
+
+    </button>
+
+    <button class="page-btn" (click)="changePage(totalPages)" [disabled]="pageNumber === totalPages">
+
+      ⏭
+
+    </button>
+
+  </div>
+
+  }
+  <br>
+
+
+
+  <!-- toasts -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+    <!-- ADD -->
+    <div class="toast-modern shadow-lg success" *ngIf="showSuccess">
+
+      <div class="toast-icon success">
+        <i class="fa fa-circle-check"></i>
+      </div>
+
+      <div class="toast-content">
+        <div class="toast-title">Success</div>
+        <div class="toast-message">Product added successfully</div>
+      </div>
+
+      <button class="toast-close" (click)="showSuccess = false">
+        <i class="fa fa-xmark"></i>
+      </button>
+
+    </div>
+
+
+    <!-- UPDATE -->
+    <div class="toast-modern shadow-lg warning" *ngIf="showUpdateSuccess">
+
+      <div class="toast-icon warning">
+        <i class="fa fa-pen"></i>
+      </div>
+
+      <div class="toast-content">
+        <div class="toast-title">Updated</div>
+        <div class="toast-message">Product updated successfully</div>
+      </div>
+
+      <button class="toast-close" (click)="showUpdateSuccess = false">
+        <i class="fa fa-xmark"></i>
+      </button>
+
+    </div>
+
+
+    <!-- DELETE -->
+    <div class="toast-modern shadow-lg danger" *ngIf="showDeleteSuccess">
+
+      <div class="toast-icon danger">
+        <i class="fa fa-trash"></i>
+      </div>
+
+      <div class="toast-content">
+        <div class="toast-title">Deleted</div>
+        <div class="toast-message">Product deleted successfully</div>
+      </div>
+
+      <button class="toast-close" (click)="showDeleteSuccess = false">
+        <i class="fa fa-xmark"></i>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="modal fade" id="addModal">
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content add-category-modal border-0">
+
+      <div class="modal-header modal-header-custom border-0">
+
+        <div>
+          <h4 class="fw-bold mb-1">
+            <i class="fa fa-folder-plus me-2"></i>
+            Add Category
+          </h4>
+
+          <small class="text-secondary">
+            Create a new category
+          </small>
+        </div>
+
+        <button class="btn-close btn-close-white" data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+      <div class="modal-body p-4">
+
+        <form [formGroup]="addForm">
+
+          <label class="form-label fw-semibold">
+            Category Name
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              <i class="fa fa-folder"></i>
+            </span>
+
+            <input class="form-control modern-input" placeholder="Enter category name" formControlName="name">
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="modal-footer border-0 p-4 pt-0">
+
+        <button class="btn btn-outline-light w-50" data-bs-dismiss="modal">
+
+          Cancel
+
+        </button>
+
+        <button class="btn save-btn w-50" [disabled]="addForm.invalid" (click)="add()">
+
+          <i class="fa fa-plus me-2"></i>
+          Save Category
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="editModal">
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content add-category-modal border-0">
+
+      <div class="modal-header modal-header-custom border-0">
+
+        <div>
+          <h4 class="fw-bold mb-1">
+            <i class="fa fa-pen me-2"></i>
+            Edit Category
+          </h4>
+
+          <small class="text-secondary">
+            Update category information
+          </small>
+        </div>
+
+        <button class="btn-close btn-close-white" data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+      <div class="modal-body p-4">
+
+        <form [formGroup]="editForm">
+
+          <label class="form-label fw-semibold">
+            Category Name
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              <i class="fa fa-folder"></i>
+            </span>
+
+            <input class="form-control modern-input" formControlName="name">
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="modal-footer border-0 p-4 pt-0">
+
+        <button class="btn btn-outline-light w-50" data-bs-dismiss="modal">
+
+          Cancel
+
+        </button>
+
+        <button class="btn save-btn w-50" [disabled]="editForm.invalid" (click)="update()">
+
+          <i class="fa fa-floppy-disk me-2"></i>
+          Update
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="deleteModal">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content delete-modal border-0">
+
+      <div class="modal-body p-4 text-center">
+
+        <div class="delete-icon-circle mb-4">
+
+          <i class="fa fa-trash"></i>
+
+        </div>
+
+        <h3 class="fw-bold text-light">
+
+          Delete Category?
+
+        </h3>
+
+        <p class="text-secondary">
+
+          This action cannot be undone
+
+        </p>
+
+        <div class="delete-category-card rounded-4 p-3 mt-4">
+
+          <h5 class="fw-bold text-light mb-1">
+
+            {{ deleteItem?.name }}
+
+          </h5>
+
+          <small class="text-secondary">
+
+            Category ID #{{ deleteItem?.id }}
+
+          </small>
+
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+
+          <button class="btn cancel-delete-btn w-50" data-bs-dismiss="modal">
+
+            Cancel
+
+          </button>
+
+          <button class="btn confirm-delete-btn w-50" (click)="confirmDelete()">
+
+            <i class="fa fa-trash me-2"></i>
+
+            Delete
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

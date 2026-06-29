@@ -15,6 +15,8 @@ import { CartService } from '../../services/CartService/cart-service.service';
 export class CartComponent implements OnInit {
 
   cartItems: any[] = [];
+  defaultImage = 'https://images.unsplash.com/photo-1519389950473-47ba0277781c';
+  apiUrl = 'https://localhost:7298';
 
   private orderService = inject(OrderService);
   private cartService = inject(CartService);
@@ -28,7 +30,7 @@ export class CartComponent implements OnInit {
 
   selectedCustomerId = 0;
 
-
+  paymentMethod = 'cash';
 
   ngOnInit(): void {
     this.loadCart();
@@ -42,9 +44,9 @@ export class CartComponent implements OnInit {
   }
 
   loadCustomers() {
-    this.orderService.getCustomers()
+    this.orderService.getCustomers({ pageNumber: 1, pageSize: 1000, search: '' })
       .subscribe(res => {
-        this.customers = res;
+        this.customers = res.items;
       });
   }
 
@@ -150,9 +152,11 @@ export class CartComponent implements OnInit {
           }, 2000);
         },
 
-        error: () => {
+        error: (err) => {
 
-          this.showError('Something went wrong while creating the order');
+          this.showError(
+            err.error || 'Something went wrong while creating the order'
+          );
 
         }
 

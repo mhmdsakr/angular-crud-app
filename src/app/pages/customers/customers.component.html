@@ -1,49 +1,136 @@
 <div class="container mt-4">
 
-  <h2 class="mb-4 fw-bold text-secondary">👥 Customers</h2>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-4 fw-bold text-secondary">👥 Customers</h2>
+
+    <button *ngIf="isAdmin() || isSuper()" class="add-btn" data-bs-toggle="modal" data-bs-target="#addModal">
+      + Add Customer
+    </button>
+
+
+  </div>
+
 
   <div class="row g-4">
 
-    @for(customer of customers; track customer.id){
+    <div class="search-box">
 
-    <div class="col-md-6 col-lg-4">
+      <input class="form-control search-input" placeholder="Search by name ,email or address" [(ngModel)]="searchText"
+        (input)="onSearchChange()">
 
-      <div class="customer-card">
+    </div>
 
-        <!-- avatar -->
-        <div class="avatar">
 
-          <img [src]="defaultAvatar" />
+    <div class="row g-4">
 
-        </div>
+      @for(customer of customers; track customer.id){
 
-        <!-- info -->
-        <div class="info">
+      <div class="col-lg-4 col-md-6">
 
-          <h5 class="name">
-            {{ customer.name }}
-          </h5>
+        <div class="customer-card">
 
-          <p class="id">
-            ID: #{{ customer.id }}
-          </p>
+          <!-- Header -->
+          <div class="card-header">
 
-        </div>
+            <div class="avatar">
 
-        <!-- actions (optional) -->
-        <div class="actions">
+              {{ customer.name.charAt(0).toUpperCase() }}
 
-          <button class="btn-view">
-            View
-          </button>
+            </div>
+
+            <div class="customer-info">
+
+              <h5>{{ customer.name }}</h5>
+
+              <small>#{{ customer.id }}</small>
+
+            </div>
+
+            <span class="orders-badge">
+
+              {{ customer.ordersCount }}
+
+              Orders
+
+            </span>
+
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Details -->
+
+          <div class="customer-details">
+
+            <div class="info-row">
+
+              <i class="fa-solid fa-phone"></i>
+
+              <span>
+
+                {{ customer.phone || 'No Phone' }}
+
+              </span>
+
+            </div>
+
+            <div class="info-row">
+
+              <i class="fa-solid fa-envelope"></i>
+
+              <span>
+
+                {{ customer.email || 'No Email' }}
+
+              </span>
+
+            </div>
+
+            <div class="info-row">
+
+              <i class="fa-solid fa-location-dot"></i>
+
+              <span>
+
+                {{ customer.address || 'No Address' }}
+
+              </span>
+
+            </div>
+
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Actions -->
+
+          <div class="actions">
+
+            <button *ngIf="isAdmin()" class="btn-action edit" (click)="openEdit(customer.id)">
+
+              <i class="fa fa-pen"></i>
+
+            </button>
+
+            <button *ngIf="isAdmin()" class="btn-action delete" (click)="openDelete(customer)">
+
+              <i class="fa fa-trash"></i>
+
+            </button>
+
+          </div>
 
         </div>
 
       </div>
 
+      }
+
     </div>
 
-    }
+
+
 
 
     @if(loading){
@@ -82,13 +169,389 @@
 
     @if(!loading && !errorMessage && customers.length === 0){
 
-    <div class="alert alert-warning text-center">
-
-      No Customers Found
-
+    <div class="text-center my-5 text-secondary">
+      <h4>
+        <i class="fa-solid fa-users me-2"></i>
+        No Customers Found
+      </h4>
     </div>
 
     }
+
+  </div>
+
+
+  <div class="pagination-container mb-4" *ngIf="totalPages > 1">
+
+    <button class="btn btn-outline-secondary" (click)="changePage(1)" [disabled]="pageNumber===1">
+
+      ⏮
+
+    </button>
+
+    <button class="btn btn-outline-secondary" (click)="changePage(pageNumber-1)" [disabled]="pageNumber===1">
+
+      ‹
+
+    </button>
+
+    <span class="mx-3">
+
+      Page {{pageNumber}} / {{totalPages}}
+
+    </span>
+
+    <button class="btn btn-outline-secondary" (click)="changePage(pageNumber+1)" [disabled]="pageNumber===totalPages">
+
+      ›
+
+    </button>
+
+    <button class="btn btn-outline-secondary" (click)="changePage(totalPages)" [disabled]="pageNumber===totalPages">
+
+      ⏭
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<div class="modal fade" id="addModal">
+
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+
+    <div class="modal-content add-modal border-0">
+
+      <!-- HEADER -->
+      <div class="modal-header border-0">
+
+        <div>
+
+          <h4 class="fw-bold mb-1">
+            <i class="fa fa-user-plus me-2"></i>
+            Add Customer
+          </h4>
+
+          <small class="text-secondary">
+            Create a new customer
+          </small>
+
+        </div>
+
+        <button class="btn-close" data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+
+      <!-- BODY -->
+      <div class="modal-body p-4">
+
+        <form [formGroup]="addForm">
+
+          <!-- NAME -->
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+              Customer Name
+            </label>
+
+            <input class="form-control" placeholder="Enter customer name" formControlName="name">
+
+            <small class="text-danger" *ngIf="addForm.get('name')?.touched &&
+                          addForm.get('name')?.invalid">
+
+              Customer name is required
+
+            </small>
+
+          </div>
+
+
+          <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label fw-semibold">
+                Phone
+              </label>
+
+              <input class="form-control" placeholder="010xxxxxxxx" formControlName="phone">
+
+              <small class="text-danger" *ngIf="addForm.get('phone')?.errors?.['maxlength']">
+
+                Phone can't exceed 20 characters
+
+              </small>
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label fw-semibold">
+                Email
+              </label>
+
+              <input class="form-control" placeholder="example@email.com" formControlName="email">
+
+              <small class="text-danger" *ngIf="addForm.get('email')?.touched &&
+                            addForm.get('email')?.errors?.['email']">
+
+                Invalid email address
+
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+
+              Address
+
+            </label>
+
+            <textarea rows="4" class="form-control" placeholder="Customer address" formControlName="address">
+            </textarea>
+
+            <small class="text-danger" *ngIf="addForm.get('address')?.errors?.['maxlength']">
+
+              Address can't exceed 300 characters
+
+            </small>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <!-- FOOTER -->
+      <div class="modal-footer border-0">
+
+        <button class="btn btn-outline-secondary w-50" data-bs-dismiss="modal">
+
+          Cancel
+
+        </button>
+
+
+        <button class="btn btn-primary w-50" (click)="addCustomer()" [disabled]="addForm.invalid">
+
+          <i class="fa fa-plus me-2"></i>
+
+          Save Customer
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="modal fade" id="editModal">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content add-modal">
+
+      <div class="modal-header border-0">
+
+        <h4>
+
+          Edit Customer
+
+        </h4>
+
+        <button class="btn-close" data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+      <div class="modal-body">
+
+        <form [formGroup]="editForm">
+
+          <div class="mb-3">
+
+            <label>Name</label>
+
+            <input class="form-control modern-input" formControlName="name">
+
+          </div>
+
+          <div class="mb-3">
+
+            <label>Phone</label>
+
+            <input class="form-control modern-input" formControlName="phone">
+
+          </div>
+
+          <div class="mb-3">
+
+            <label>Email</label>
+
+            <input class="form-control modern-input" formControlName="email">
+
+          </div>
+
+          <div class="mb-3">
+
+            <label>Address</label>
+
+            <textarea rows="3" class="form-control modern-input" formControlName="address"></textarea>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="modal-footer border-0">
+
+        <button class="btn btn-outline-secondary w-50" data-bs-dismiss="modal">
+
+          Cancel
+
+        </button>
+
+        <button class="btn btn-warning w-50" (click)="updateCustomer()">
+
+          Save Changes
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="modal fade" id="deleteModal">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content add-modal">
+
+      <div class="modal-body text-center p-5">
+
+        <div class="delete-icon mb-3">
+
+          <i class="fa fa-trash"></i>
+
+        </div>
+
+        <div *ngIf="selectedCustomer">
+          <h3>
+
+            Delete Customer?
+
+          </h3>
+
+          <p>
+
+            Are you sure you want to delete
+
+            <br>
+
+            <b>{{selectedCustomer.name}}</b>
+
+
+
+          </p>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+
+          <button class="btn btn-outline-secondary w-50" data-bs-dismiss="modal">
+
+            Cancel
+
+          </button>
+
+          <button class="btn btn-danger w-50" (click)="deleteCustomer()">
+
+            Delete
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- toasts -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+  <div class="toast-modern shadow-lg success" *ngIf="showSuccess">
+
+    <div class="toast-icon success">
+      <i class="fa fa-circle-check"></i>
+    </div>
+
+    <div class="toast-content">
+      <div class="toast-title">Success</div>
+      <div class="toast-message">Product added successfully</div>
+    </div>
+
+    <button class="toast-close" (click)="showSuccess = false">
+      <i class="fa fa-xmark"></i>
+    </button>
+
+  </div>
+
+
+  <div class="toast-modern shadow-lg warning" *ngIf="showUpdateSuccess">
+
+    <div class="toast-icon warning">
+      <i class="fa fa-pen"></i>
+    </div>
+
+    <div class="toast-content">
+      <div class="toast-title">Updated</div>
+      <div class="toast-message">Product updated successfully</div>
+    </div>
+
+    <button class="toast-close" (click)="showUpdateSuccess = false">
+      <i class="fa fa-xmark"></i>
+    </button>
+
+  </div>
+
+
+  <div class="toast-modern shadow-lg danger" *ngIf="showDeleteSuccess">
+
+    <div class="toast-icon danger">
+      <i class="fa fa-trash"></i>
+    </div>
+
+    <div class="toast-content">
+      <div class="toast-title">Deleted</div>
+      <div class="toast-message">Product deleted successfully</div>
+    </div>
+
+    <button class="toast-close" (click)="showDeleteSuccess = false">
+      <i class="fa fa-xmark"></i>
+    </button>
 
   </div>
 

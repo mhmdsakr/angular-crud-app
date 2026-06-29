@@ -31,6 +31,10 @@ export class SidebarComponent {
     return this.role === 'User';
   }
 
+  isSuper() {
+    return this.role === 'SuperAdmin';
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

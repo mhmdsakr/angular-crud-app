@@ -28,33 +28,33 @@
       </a>
     </li>
 
-    <li routerLinkActive="active" *ngIf="isAdmin()">
+    <li routerLinkActive="active" *ngIf="isAdmin() || isSuper()">
       <a routerLink="/customers">
         <i class="fa fa-users me-2"></i>
         Customers
       </a>
     </li>
 
-    <li routerLinkActive="active" *ngIf="isAdmin()">
+    <li routerLinkActive="active" *ngIf="isAdmin() || isSuper()">
       <a routerLink="/users">
         <i class="fa fa-user me-2"></i>
         Users
       </a>
     </li>
 
-    <!-- <li routerLinkActive="active" *ngIf="isAdmin()">
-      <a routerLink="/department">
-        <i class="fa fa-sitemap me-2"></i>
-        Departments
+    <li routerLinkActive="active" *ngIf="isAdmin() || isSuper()">
+      <a routerLink="/suppliers">
+        <i class="fa fa-user-graduate me-2"></i>
+        Suppliers
       </a>
     </li>
 
-    <li routerLinkActive="active" *ngIf="isAdmin()">
-      <a routerLink="/students">
+    <li routerLinkActive="active" *ngIf="isAdmin() || isSuper()">
+      <a routerLink="/category">
         <i class="fa fa-user-graduate me-2"></i>
-        Students
+        Categories
       </a>
-    </li> -->
+    </li>
 
     <li routerLinkActive="active">
       <a routerLink="/settings">

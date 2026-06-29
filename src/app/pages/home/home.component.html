@@ -6,7 +6,7 @@
     <div>
       <h1>
         <i class="fa-solid fa-gauge-high"></i>
-        {{ isAdmin() ? 'Admin Overview' : 'User Overview' }}
+        {{ isAdmin() || isSuper() ? 'Admin Overview' : 'User Overview' }}
       </h1>
 
       <p>Summary of your latest performance and operations</p>
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div class="kpi" *ngIf="isAdmin">
+    <div class="kpi">
       <i class="fa-solid fa-user-group"></i>
       <div>
         <span>Users</span>
@@ -111,7 +111,7 @@
     </div>
 
     <!-- RIGHT: ADMIN ONLY -->
-    <div class="panel" *ngIf="isAdmin()">
+    <div class="panel" *ngIf="isAdmin() || isSuper()">
 
       <h3>
         <i class="fa-solid fa-shield-halved"></i>
@@ -124,8 +124,8 @@
       </div>
 
       <div class="mini-card dark">
-        <span>System Status</span>
-        <h2>Healthy</h2>
+        <span>Suppliers</span>
+        <h2>{{suppliersCount}}</h2>
       </div>
 
       <div class="mini-card dark">

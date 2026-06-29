@@ -10,9 +10,17 @@ export interface Product {
   id: number;
   name: string;
   price: number;
-  category: string;
+
   stock: number;
   isAvailable: boolean;
+
+  categoryId: number;
+  categoryName: string;
+
+  supplierId: number;
+  supplierName: string;
+
+  mainImage?: string;
 }
 
 export interface OrderItem {
@@ -36,6 +44,13 @@ export interface Order {
 
   customer: Customer;
   items: OrderItem[];
+}
+
+export interface PagedResult<T> {
+  items: T[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
 }
 
 @Injectable({
@@ -70,11 +85,28 @@ export class OrderService {
   }
 
   // ================= LOOKUPS =================
-  getCustomers() {
-    return this.http.get<Customer[]>(`${this.baseUrl}/customers`);
+  getCustomers(params?: any) {
+    return this.http.get<PagedResult<Customer>>(
+      `${this.baseUrl}/customers`,
+      {
+        params
+      }
+    );
   }
 
   getProducts() {
     return this.http.get<Product[]>(`${this.baseUrl}/product`);
+  }
+
+
+  // ================= Invoice =================
+
+  downloadInvoice(id: number) {
+    return this.http.get(
+      `${this.baseUrl}/orders/${id}/invoice`,
+      {
+        responseType: 'blob'
+      }
+    );
   }
 }

@@ -1,147 +1,119 @@
 <div class="container mt-4">
 
-  <div class="page-header d-flex justify-content-between align-items-center mb-4">
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="text-secondary fw-bold">📦 Products Dashboard</h2>
 
-    <button *ngIf="isAdmin()" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal"
-      data-bs-target="#addModal">
+    <button *ngIf="isAdmin() || isSuper()" class="add-btn" data-bs-toggle="modal" data-bs-target="#addModal">
       + Add Product
     </button>
   </div>
 
-  <div class="search-box mb-4">
-
-    <input type="text" class="form-control search-input" placeholder="Search products by name or category..."
-      [(ngModel)]="searchText" (input)="onSearchChange()" />
-
+  <!-- SEARCH -->
+  <div class="mb-4">
+    <input type="text" class="form-control search-input" placeholder="Search by name, category, supplier..."
+      [(ngModel)]="searchText" (ngModelChange)="onSearchChange()" />
   </div>
 
+  <!-- GRID -->
+  <div class="row g-4">
 
-  <div class="row g-4 d-flex justify-content-center">
-
-    <!-- @for (p of products; track p.id) { -->
-    @for (p of paginatedProducts; track p.id){
+    @for (p of products; track p.id) {
 
     <div class="col-md-6 col-lg-4">
 
-      <div class="card product-card">
+      <div class="card product-card h-100">
 
-        <img [src]="defaultImage" class="card-img-top" style="height:180px;object-fit:cover" />
+        <!-- IMAGE -->
+        <div class="product-image">
 
+          <img [src]="p.mainImage ? apiUrl + p.mainImage : defaultImage" />
+
+          <div class="product-status" [class.available]="p.isAvailable && p.stock > 0">
+
+            {{ p.isAvailable && p.stock > 0 ? 'Available' : 'Out Of Stock' }}
+
+          </div>
+
+        </div>
+
+        <!-- BODY -->
         <div class="card-body">
 
-          <h5 class="fw-bold text-light">{{ p.name }}</h5>
+          <div class="product-top">
 
-          <small class="text-secondary">
-            {{ p.category }}
-          </small>
+            <div>
 
-          <div class="mt-2 fw-bold price-text">
-            {{ p.price }} EGP
+              <h5 class="product-name">
+                {{ p.name }}
+              </h5>
+
+              <div class="product-category">
+                {{ p.categoryName }}
+              </div>
+
+            </div>
+
+            <div class="price-box">
+              {{ p.price }} EGP
+            </div>
+
           </div>
 
-          <div class="mt-2 text-secondary">
-            Stock:
-            <span class="badge stock-badge">
+          <div class="supplier-box">
+
+            <i class="fa fa-truck"></i>
+
+            {{ p.supplierName }}
+
+          </div>
+
+          <div class="stock-box">
+
+            <span>Stock</span>
+
+            <span class="stock-badge">
               {{ p.stock }}
             </span>
-          </div>
-
-          <div class="mt-2">
-
-            @if(p.isAvailable){
-            <span class="badge badge-success">Available</span>
-            } @else {
-            <span class="badge badge-danger">Out</span>
-            }
 
           </div>
 
         </div>
 
-        <div class="card-footer card-footer-dark d-flex justify-content-between gap-2">
+        <!-- ACTIONS -->
+        <div class="actions">
 
-          <button class="btn btn-icon btn-edit" *ngIf="isAdmin()" data-bs-toggle="modal" data-bs-target="#editModal"
-            (click)="openEdit(p)">
+          @if(isAdmin() || isSuper()){
+
+          <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editModal" (click)="openEdit(p)">
+
             <i class="fa fa-pen"></i>
-          </button>
-
-          <!-- <button class="btn btn-icon w-100" (click)="addToCart(p)" [disabled]="!p.isAvailable">
-
-            @if(p.isAvailable){
-            <i class="fa-solid fa-shopping-cart"></i>
-            } @else {
-            Out of Stock
-            }
-          </button> -->
-          <button class="btn btn-icon w-100" (click)="addToCart(p)" [disabled]="!p.isAvailable || p.stock === 0">
-
-            @if(p.isAvailable && p.stock > 0){
-            <i class="fa-solid fa-shopping-cart"></i>
-            } @else {
-            Out of Stock
-            }
 
           </button>
 
-          <button class="btn btn-icon btn-delete" *ngIf="isAdmin()" data-bs-toggle="modal" data-bs-target="#deleteModal"
-            (click)="openDelete(p)">
+          }
+
+          <button class="cart-btn" (click)="addToCart(p)" [disabled]="!p.isAvailable || p.stock === 0">
+
+            <i class="fa fa-cart-plus"></i>
+
+            Add To Cart
+
+          </button>
+
+          @if(isAdmin() || isSuper()){
+
+          <button class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDelete(p)">
+
             <i class="fa fa-trash"></i>
+
           </button>
+
+          }
 
         </div>
 
       </div>
-
-    </div>
-    }
-
-
-    @if(loading){
-
-    <div class="loading-box">
-
-      <div class="loading-spinner"></div>
-
-      <p>جاري عرض المنتجات...</p>
-
-    </div>
-
-    }
-
-
-    @if(errorMessage){
-
-    <div class="error-box">
-
-      <div class="error-icon">
-        ⚠
-      </div>
-
-      <div class="error-content">
-
-        <h5>Something went wrong</h5>
-
-        <p>{{ errorMessage }}</p>
-
-      </div>
-
-    </div>
-
-    }
-
-
-    @if(!loading && !errorMessage && filteredProducts.length === 0){
-
-    <div class="empty-state">
-
-      <div class="empty-icon">
-        📦
-      </div>
-
-      <h4>No Products Found</h4>
-
-      <p>Try adjusting your search or add new products</p>
 
     </div>
 
@@ -149,33 +121,52 @@
 
   </div>
 
+  <!-- LOADING -->
+  @if (loading) {
+  <div class="text-center my-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2">Loading products...</p>
+  </div>
+  }
 
-  @if(filteredProducts.length > 0){
+  <!-- ERROR -->
+  @if (errorMessage) {
+  <div class="alert alert-danger mt-3">
+    {{ errorMessage }}
+  </div>
+  }
 
-  <div class="pagination-container mt-4">
+  <!-- EMPTY -->
+  @if (!loading && !errorMessage && products.length === 0) {
+  <div class="text-center my-5 text-secondary">
+    <h4>No Products Found 📦</h4>
+  </div>
+  }
 
-    <!-- First -->
-    <button class="page-btn" (click)="changePage(1)" [disabled]="pageNumber === 1">
+  <!-- PAGINATION -->
+  @if (totalPages > 1) {
+
+  <div class="d-flex justify-content-center align-items-center gap-2 mt-4">
+
+    <button class="btn btn-outline-secondary btn-sm" (click)="changePage(1)" [disabled]="pageNumber === 1">
       ⏮
     </button>
 
-    <!-- Prev -->
-    <button class="page-btn" (click)="changePage(pageNumber - 1)" [disabled]="pageNumber === 1">
-      <i class="fa fa-chevron-left"></i>
+    <button class="btn btn-outline-secondary btn-sm" (click)="changePage(pageNumber - 1)" [disabled]="pageNumber === 1">
+      ‹
     </button>
 
-    <!-- Page Info -->
-    <div class="page-info">
-      Page <strong>{{ pageNumber }}</strong> / {{ totalPages }}
-    </div>
+    <span class="px-3">
+      Page <b>{{ pageNumber }}</b> / {{ totalPages }}
+    </span>
 
-    <!-- Next -->
-    <button class="page-btn" (click)="changePage(pageNumber + 1)" [disabled]="pageNumber === totalPages">
-      <i class="fa fa-chevron-right"></i>
+    <button class="btn btn-outline-secondary btn-sm" (click)="changePage(pageNumber + 1)"
+      [disabled]="pageNumber === totalPages">
+      ›
     </button>
 
-    <!-- Last -->
-    <button class="page-btn" (click)="changePage(totalPages)" [disabled]="pageNumber === totalPages">
+    <button class="btn btn-outline-secondary btn-sm" (click)="changePage(totalPages)"
+      [disabled]="pageNumber === totalPages">
       ⏭
     </button>
 
@@ -183,147 +174,158 @@
 
   }
 
+
+
   <br>
-
-
 </div>
 
 
 
+
 <div class="modal fade" id="addModal">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content add-product-modal border-0">
 
-      <!-- Header -->
-      <div class="modal-header modal-header-custom border-0">
+      <!-- HEADER -->
+      <div class="modal-header border-0">
 
         <div>
           <h4 class="fw-bold mb-1">
             <i class="fa fa-box-open me-2"></i>
             Add Product
           </h4>
-
           <small class="text-secondary">
             Create a new product in inventory
           </small>
         </div>
 
-        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
 
       </div>
 
-      <!-- Body -->
+      <!-- BODY -->
       <div class="modal-body p-4">
 
         <form [formGroup]="productForm">
 
-          <!-- Name -->
+          <!-- NAME -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Product Name</label>
+
+            <input class="form-control" placeholder="Enter product name" formControlName="name">
+
+            <small class="text-danger" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+              Name is required (min 4 chars)
+            </small>
+          </div>
+
+
+
+
+
           <div class="mb-3">
 
             <label class="form-label fw-semibold">
-              Product Name
+              Product Image
             </label>
 
-            <div class="input-group">
-
-              <span class="input-group-text">
-                <i class="fa fa-tag"></i>
-              </span>
-
-              <input class="form-control modern-input" placeholder="Enter product name" formControlName="name">
-
-            </div>
-
-            <small class="text-danger" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
-
-              Name must be at least 4 characters
-
-            </small>
+            <input type="file" class="form-control" accept="image/*" (change)="onImageSelected($event)">
 
           </div>
 
-          <!-- Category -->
-          <div class="mb-3">
 
-            <label class="form-label fw-semibold">
-              Category
-            </label>
 
-            <div class="input-group">
 
-              <span class="input-group-text">
-                <i class="fa fa-layer-group"></i>
-              </span>
 
-              <input class="form-control modern-input" placeholder="Enter category" formControlName="category">
+
+
+          <div class="row">
+
+            <!-- CATEGORY -->
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label fw-semibold">Category</label>
+
+              <select class="form-select" formControlName="categoryId">
+
+                <option value="0" disabled>Select Category</option>
+
+                <option *ngFor="let c of categories" [value]="c.id">
+                  {{ c.name }}
+                </option>
+
+              </select>
+
+              <small class="text-danger"
+                *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched">
+                Category is required
+              </small>
 
             </div>
 
-            <small class="text-danger"
-              *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched">
+            <!-- SUPPLIER -->
+            <div class="col-md-6 mb-3">
 
-              Category is required
+              <label class="form-label fw-semibold">Supplier</label>
 
-            </small>
+              <select class="form-select" formControlName="supplierId">
+
+                <option value="0" disabled>Select Supplier</option>
+
+                <option *ngFor="let s of suppliers" [value]="s.id">
+                  {{ s.name }}
+                </option>
+
+              </select>
+
+              <small class="text-danger"
+                *ngIf="productForm.get('supplierId')?.invalid && productForm.get('supplierId')?.touched">
+                Supplier is required
+              </small>
+
+            </div>
 
           </div>
 
           <div class="row">
 
-            <!-- Price -->
+            <!-- PRICE -->
             <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Price</label>
 
-              <label class="form-label fw-semibold">
-                Price
-              </label>
-
-              <div class="input-group">
-
-                <span class="input-group-text">
-                  <i class="fa fa-money-bill"></i>
-                </span>
-
-                <input type="number" class="form-control modern-input" formControlName="price">
-
-              </div>
-
+              <input type="number" class="form-control" formControlName="price">
             </div>
 
-            <!-- Stock -->
+            <!-- STOCK -->
             <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Stock</label>
 
-              <label class="form-label fw-semibold">
-                Stock
-              </label>
-
-              <div class="input-group">
-
-                <span class="input-group-text">
-                  <i class="fa fa-cubes"></i>
-                </span>
-
-                <input type="number" class="form-control modern-input" formControlName="stock">
-
-              </div>
-
+              <input type="number" class="form-control" formControlName="stock">
             </div>
 
+          </div>
+
+          <!-- AVAILABLE -->
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" formControlName="isAvailable">
+
+            <label class="form-check-label">
+              Available
+            </label>
           </div>
 
         </form>
 
       </div>
 
-      <!-- Footer -->
-      <div class="modal-footer border-0 p-4 pt-0">
+      <!-- FOOTER -->
+      <div class="modal-footer border-0">
 
-        <button class="btn btn-outline-light w-50" data-bs-dismiss="modal">
-
+        <button class="btn btn-outline-secondary w-50" data-bs-dismiss="modal">
           Cancel
-
         </button>
 
-        <button class="btn save-btn w-50" (click)="addProduct()" [disabled]="productForm.invalid">
+        <button class="btn btn-primary w-50" (click)="addProduct()" [disabled]="productForm.invalid">
 
           <i class="fa fa-plus me-2"></i>
           Save Product
@@ -365,111 +367,78 @@
 
         <form [formGroup]="editForm">
 
-          <!-- Name -->
+          <!-- NAME -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Product Name</label>
+
+            <input class="form-control" formControlName="name">
+          </div>
+
+          <!-- IMAGE -->
           <div class="mb-3">
 
-            <label class="form-label fw-semibold">
-              Product Name
+            <label class="form-label">
+              Product Image
             </label>
 
-            <div class="input-group">
-
-              <span class="input-group-text">
-                <i class="fa fa-tag"></i>
-              </span>
-
-              <input class="form-control modern-input" placeholder="Enter product name" formControlName="name">
-
-            </div>
-
-            <small class="text-danger" *ngIf="editForm.get('name')?.invalid && editForm.get('name')?.touched">
-
-              Name must be at least 4 characters
-
-            </small>
+            <input type="file" class="form-control" accept="image/*" (change)="onEditImageSelected($event)">
 
           </div>
 
-          <!-- Category -->
-          <div class="mb-3">
+          <div class="row">
 
-            <label class="form-label fw-semibold">
-              Category
-            </label>
+            <!-- CATEGORY -->
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Category</label>
 
-            <div class="input-group">
+              <select class="form-select" formControlName="categoryId">
 
-              <span class="input-group-text">
-                <i class="fa fa-layer-group"></i>
-              </span>
+                <option value="0" disabled>Select Category</option>
 
-              <input class="form-control modern-input" placeholder="Enter category" formControlName="category">
+                <option *ngFor="let c of categories" [value]="c.id">
+                  {{ c.name }}
+                </option>
 
+              </select>
+            </div>
+
+            <!-- SUPPLIER -->
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Supplier</label>
+
+              <select class="form-select" formControlName="supplierId">
+
+                <option value="0" disabled>Select Supplier</option>
+
+                <option *ngFor="let s of suppliers" [value]="s.id">
+                  {{ s.name }}
+                </option>
+
+              </select>
             </div>
 
           </div>
 
           <div class="row">
 
-            <!-- Price -->
+            <!-- PRICE -->
             <div class="col-md-6 mb-3">
-
-              <label class="form-label fw-semibold">
-                Price
-              </label>
-
-              <div class="input-group">
-
-                <span class="input-group-text">
-                  <i class="fa fa-money-bill-wave"></i>
-                </span>
-
-                <input type="number" class="form-control modern-input" formControlName="price">
-
-              </div>
-
+              <label>Price</label>
+              <input type="number" class="form-control" formControlName="price">
             </div>
 
-            <!-- Stock -->
+            <!-- STOCK -->
             <div class="col-md-6 mb-3">
-
-              <label class="form-label fw-semibold">
-                Stock
-              </label>
-
-              <div class="input-group">
-
-                <span class="input-group-text">
-                  <i class="fa fa-cubes"></i>
-                </span>
-
-                <input type="number" class="form-control modern-input" formControlName="stock">
-
-              </div>
-
+              <label>Stock</label>
+              <input type="number" class="form-control" formControlName="stock">
             </div>
 
           </div>
 
-          <!-- Availability -->
-          <div class="availability-box mt-3">
-
-            <div>
-              <div class="fw-bold">
-                Availability Status
-              </div>
-
-              <small class="text-secondary">
-                Toggle product availability
-              </small>
-            </div>
-
-            <div class="form-check form-switch m-0">
-
-              <input class="form-check-input big-switch" type="checkbox" formControlName="isAvailable">
-
-            </div>
-
+          <!-- AVAILABLE -->
+          <div class="form-check form-switch mt-3">
+            <input class="form-check-input" type="checkbox" formControlName="isAvailable">
+            <label>Available</label>
           </div>
 
         </form>
@@ -497,6 +466,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="modal fade" id="deleteModal">
 
@@ -531,7 +501,8 @@
 
           <div class="d-flex align-items-center gap-3">
 
-            <img [src]="defaultImage" width="70" height="70" class="rounded-3" style="object-fit: cover">
+            <img [src]="deleteProduct.mainImage ? apiUrl + deleteProduct.mainImage : defaultImage" width="70"
+              height="70" class="rounded-3" style="object-fit: cover" />
 
             <div>
 
@@ -543,7 +514,7 @@
 
               <small class="text-secondary">
 
-                {{ deleteProduct.category }}
+                {{ deleteProduct.categoryName }}
 
               </small>
 
@@ -616,7 +587,6 @@
   </div>
 
 </div>
-
 
 
 <!-- toasts -->
